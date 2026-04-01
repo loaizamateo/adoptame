@@ -10,6 +10,7 @@ import { petRoutes } from './routes/pets'
 import { foundationRoutes } from './routes/foundations'
 import { uploadRoutes } from './routes/upload'
 import { adoptionRoutes } from './routes/adoptions'
+import { dashboardRoutes } from './routes/dashboard'
 
 const fastify = Fastify({ logger: env.NODE_ENV === 'development' })
 
@@ -20,11 +21,12 @@ async function bootstrap() {
   await fastify.register(multipart, { limits: { fileSize: 5 * 1024 * 1024 } })
   await fastify.register(import('./plugins/jwt'))
 
-  fastify.register(authRoutes, { prefix: '/api/v1/auth' })
-  fastify.register(petRoutes, { prefix: '/api/v1/pets' })
-  fastify.register(foundationRoutes, { prefix: '/api/v1/foundations' })
-  fastify.register(uploadRoutes, { prefix: '/api/v1/upload' })
-  fastify.register(adoptionRoutes, { prefix: '/api/v1/adoptions' })
+  fastify.register(authRoutes,      { prefix: '/api/v1/auth' })
+  fastify.register(petRoutes,       { prefix: '/api/v1/pets' })
+  fastify.register(foundationRoutes,{ prefix: '/api/v1/foundations' })
+  fastify.register(uploadRoutes,    { prefix: '/api/v1/upload' })
+  fastify.register(adoptionRoutes,  { prefix: '/api/v1/adoptions' })
+  fastify.register(dashboardRoutes, { prefix: '/api/v1/dashboard' })
 
   fastify.get('/health', async () => ({ status: 'ok', timestamp: new Date().toISOString() }))
 
