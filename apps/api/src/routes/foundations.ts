@@ -73,3 +73,18 @@ export async function foundationRoutes(fastify: FastifyInstance) {
     return reply.send({ success: true, data: foundation })
   })
 }
+
+// PATCH /foundations/:id/verify — solo Admin
+async function verifyFoundation(fastify: FastifyInstance) {
+  const authenticate = (fastify as any).authenticate
+  fastify.patch('/:id/verify', { onRequest: [authenticate] }, async (request, reply) => {
+    const user = (request as any).user
+    if (user.role !== 'admin') {
+      return reply.status(403).send({ success: false, error: 'Solo admins pueden verificar fundaciones' })
+    }
+    const { id } = request.params as any
+    const foundation = await Foundation.findByIdAndUpdate(id, { verified: true }, { new: true })
+    if (!foundation) return reply.status(404).send({ success: false, error: 'Fundación no encontrada' })
+    return reply.send({ success: true, data: foundation })
+  })
+}
