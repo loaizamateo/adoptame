@@ -27,9 +27,7 @@ export default function HomePage() {
         {/* Hero compacto */}
         <section className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white">
           <div className="container mx-auto px-4 py-14 text-center">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 text-sm font-medium text-white/90 mb-5">
-              <span>🐾</span> Plataforma open source de adopción animal
-            </div>
+
             <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
               Encuentra a tu compañero<br />
               <span className="text-accent-300">ideal para adoptar</span>
