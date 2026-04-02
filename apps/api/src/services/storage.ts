@@ -1,15 +1,14 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { env } from '../config/env'
 import crypto from 'crypto'
 
-const s3 = env.R2_ACCOUNT_ID
+const s3 = env.R2_ACCESS_KEY_ID && env.R2_SECRET_ACCESS_KEY
   ? new S3Client({
-      region: 'auto',
-      endpoint: `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+      region: 'us-east-005',
+      endpoint: env.R2_ENDPOINT || 'https://s3.us-east-005.backblazeb2.com',
       credentials: {
-        accessKeyId: env.R2_ACCESS_KEY_ID!,
-        secretAccessKey: env.R2_SECRET_ACCESS_KEY!,
+        accessKeyId: env.R2_ACCESS_KEY_ID,
+        secretAccessKey: env.R2_SECRET_ACCESS_KEY,
       },
     })
   : null
@@ -20,10 +19,10 @@ export async function uploadFile(
   folder: string
 ): Promise<string> {
   if (!s3 || !env.R2_BUCKET_NAME) {
-    throw new Error('Storage no configurado. Configura las variables R2_* en .env')
+    throw new Error('Storage no configurado. Configura las variables R2_* en Railway')
   }
 
-  const ext = mimeType.split('/')[1] || 'jpg'
+  const ext = mimeType.split('/')[1]?.replace('jpeg', 'jpg') || 'jpg'
   const key = `${folder}/${crypto.randomUUID()}.${ext}`
 
   await s3.send(
