@@ -28,6 +28,11 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'adoptame-auth',
+      partialize: (state) => ({
+        user: state.user,
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
+      }),
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true)
       },

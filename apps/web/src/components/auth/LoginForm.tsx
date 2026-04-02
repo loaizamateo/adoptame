@@ -29,6 +29,8 @@ export default function LoginForm() {
       const res = await api.post('/auth/login', data)
       const { user, tokens } = res.data.data
       setAuth(user, tokens)
+      // Pequeño delay para que Zustand termine de persistir antes de navegar
+      await new Promise((r) => setTimeout(r, 100))
       router.push(user.role === 'foundation' ? '/dashboard' : '/adoptar')
     } catch (err: any) {
       setServerError(err.response?.data?.error || 'Error al iniciar sesión')
