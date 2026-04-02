@@ -16,15 +16,22 @@ const NAV = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
-  const { user, isAuthenticated, _hasHydrated } = useAuthStore()
+  const { user } = useAuthStore()
 
   useEffect(() => {
-    if (!_hasHydrated) return
-    if (!isAuthenticated()) router.push('/login')
-    else if (user?.role !== 'foundation') router.push('/')
-  }, [_hasHydrated, user, isAuthenticated])
+    // Leer directamente de localStorage — no depende de hidratación de Zustand
+    try {
+      const raw = localStorage.getItem('adoptame-auth')
+      if (!raw) { router.push('/login'); return }
+      const { state } = JSON.parse(raw)
+      if (!state?.accessToken) { router.push('/login'); return }
+      if (state?.user?.role !== 'foundation') { router.push('/'); return }
+    } catch {
+      router.push('/login')
+    }
+  }, [])
 
-  if (!_hasHydrated || !user) return null
+  if (!user) return null
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
