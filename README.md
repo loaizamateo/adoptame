@@ -9,7 +9,7 @@
   </p>
   <img alt="License MIT" src="https://img.shields.io/badge/license-MIT-purple">
   <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen">
-  <a href="https://opencollective.com/adoptame"><img alt="Open Collective" src="https://img.shields.io/opencollective/all/adoptame?color=purple&label=donaciones"></a>
+  <a href="https://opencollective.com/adoptame-latam"><img alt="Open Collective" src="https://img.shields.io/opencollective/all/adoptame-latam?color=purple&label=donaciones"></a>
 </div>
 
 ---
@@ -24,8 +24,7 @@ Es **completamente gratuito** para fundaciones y rescatistas, y open source para
 - 🔍 Búsqueda con filtros (especie, tamaño, edad, ciudad, compatibilidad)
 - 🏠 Panel de gestión para fundaciones y refugios
 - 📋 Flujo completo de solicitud de adopción
-- 🗺️ Mapa de mascotas por ciudad
-- ❤️ Hogares de paso y voluntariado
+- ❤️ Sistema de donaciones directas a fundaciones
 - 📧 Notificaciones por email
 - 🌎 Enfocado en LATAM (español, ciudades locales)
 - 📊 SEO optimizado — cada mascota indexada en Google
@@ -34,7 +33,7 @@ Es **completamente gratuito** para fundaciones y rescatistas, y open source para
 
 | Capa | Tecnología |
 |------|-----------|
-| Frontend | Next.js 14 (App Router) + TailwindCSS + shadcn/ui |
+| Frontend | Next.js 14 (App Router) + TailwindCSS |
 | Backend | Fastify + TypeScript |
 | Base de datos | MongoDB Atlas |
 | Monorepo | Turborepo |
@@ -62,8 +61,11 @@ npm install
 cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env
 
-# Editar los .env con tus credenciales
-# Al menos: MONGODB_URI, JWT_SECRET, JWT_REFRESH_SECRET
+# Editar apps/api/.env con tu MONGODB_URI y JWT secrets
+# (ver apps/api/.env.example para referencia)
+
+# Poblar la base de datos con datos de prueba
+npm run seed --workspace=apps/api
 
 # Levantar en desarrollo
 npm run dev
@@ -72,36 +74,38 @@ npm run dev
 La app estará en:
 - **Frontend:** http://localhost:3000
 - **API:** http://localhost:3001
-- **Health:** http://localhost:3001/health
 
 ### Con Docker
 
 ```bash
 docker-compose up -d
+npm run seed --workspace=apps/api
 ```
+
+### 🌱 Credenciales de prueba (después del seed)
+
+| Rol | Email | Contraseña |
+|-----|-------|-----------|
+| Admin | admin@adoptame.app | Admin1234! |
+| Fundación (Bogotá) | fundacion1@adoptame.app | Fund1234! |
+| Fundación (Medellín) | fundacion2@adoptame.app | Fund1234! |
+| Adoptante | adoptante@adoptame.app | User1234! |
+
+El seed crea **10 mascotas** con fotos reales, **2 fundaciones verificadas** y **3 solicitudes de adopción** en distintos estados.
 
 ---
 
 ## 💜 Donaciones
 
-Adoptame es gratuito para siempre para fundaciones y rescatistas. Si quieres ayudar a mantener la plataforma viva, puedes apoyarnos:
+Adoptame es gratuito para siempre para fundaciones y rescatistas. Si quieres ayudar a mantener la plataforma viva:
 
-### Apoyar la plataforma
-
-<a href="https://opencollective.com/adoptame">
-  <img src="https://opencollective.com/adoptame/donate/button@2x.png?color=purple" width="200" alt="Donar a Adoptame en Open Collective" />
+<a href="https://opencollective.com/adoptame-latam">
+  <img src="https://opencollective.com/adoptame-latam/donate/button@2x.png?color=purple" width="200" alt="Donar a Adoptame" />
 </a>
 
-**¿Por qué Open Collective?**
-- 💎 Transparencia total — cualquiera puede ver cómo se usan los fondos
-- 🧾 Recibos automáticos para tus donaciones
-- 🌍 Soporte desde cualquier país de LATAM
+También puedes apoyar a través de [GitHub Sponsors](https://github.com/sponsors/loaizamateo).
 
-También puedes apoyar directamente a través de [GitHub Sponsors](https://github.com/sponsors/loaizamateo).
-
-### Apoyar a una fundación
-
-Cada fundación en Adoptame tiene la opción de publicar sus métodos de donación directa (Nequi, PayPal, transferencia bancaria). Visita el perfil de tu fundación favorita para apoyarla directamente — el 100% del dinero va a ellos.
+> Las fundaciones publican sus propios métodos de donación en su perfil — el 100% va directamente a ellas.
 
 ---
 
@@ -113,8 +117,7 @@ Cada fundación en Adoptame tiene la opción de publicar sus métodos de donaci�
 2. Fork el repo
 3. Crea tu rama: `git checkout -b feat/mi-feature`
 4. Commit: `git commit -m 'feat: agregar X'`
-5. Push: `git push origin feat/mi-feature`
-6. Abre un Pull Request
+5. Push y abre un Pull Request
 
 ## 👥 Contribuidores
 

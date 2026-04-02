@@ -8,7 +8,8 @@
     "start": "node dist/server.js",
     "lint": "tsc --noEmit",
     "test": "jest",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "seed": "tsx src/seed/seed.ts"
   },
   "dependencies": {
     "@adoptame/schemas": "*",
@@ -25,7 +26,8 @@
     "mongoose": "^8.9.5",
     "resend": "^4.1.2",
     "slugify": "^1.6.6",
-    "zod": "^3.24.1"
+    "zod": "^3.24.1",
+    "dotenv": "^16.4.7"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
