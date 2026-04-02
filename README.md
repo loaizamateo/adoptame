@@ -9,7 +9,7 @@
   </p>
   <img alt="License MIT" src="https://img.shields.io/badge/license-MIT-purple">
   <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen">
-  <a href="https://opencollective.com/adoptame"><img alt="Open Collective" src="https://img.shields.io/opencollective/all/adoptame?color=purple&label=donaciones"></a>
+  <a href="https://opencollective.com/adoptame-latam"><img alt="Open Collective" src="https://img.shields.io/opencollective/all/adoptame-latam?color=purple&label=donaciones"></a>
 </div>
 
 ---
@@ -88,8 +88,8 @@ Adoptame es gratuito para siempre para fundaciones y rescatistas. Si quieres ayu
 
 ### Apoyar la plataforma
 
-<a href="https://opencollective.com/adoptame">
-  <img src="https://opencollective.com/adoptame/donate/button@2x.png?color=purple" width="200" alt="Donar a Adoptame en Open Collective" />
+<a href="https://opencollective.com/adoptame-latam">
+  <img src="https://opencollective.com/adoptame-latam/donate/button@2x.png?color=purple" width="200" alt="Donar a Adoptame en Open Collective" />
 </a>
 
 **¿Por qué Open Collective?**
