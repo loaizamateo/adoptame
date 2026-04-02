@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/auth'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 const NAV = [
@@ -16,22 +16,32 @@ const NAV = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
-  const { user } = useAuthStore()
+  const { user, setAuth } = useAuthStore()
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    // Leer directamente de localStorage — no depende de hidratación de Zustand
     try {
       const raw = localStorage.getItem('adoptame-auth')
-      if (!raw) { router.push('/login'); return }
-      const { state } = JSON.parse(raw)
-      if (!state?.accessToken) { router.push('/login'); return }
-      if (state?.user?.role !== 'foundation') { router.push('/'); return }
+      if (!raw) { router.replace('/login'); return }
+      const parsed = JSON.parse(raw)
+      const state = parsed?.state ?? parsed
+      if (!state?.accessToken) { router.replace('/login'); return }
+      if (state?.user?.role !== 'foundation') { router.replace('/'); return }
+      // Rehidratar Zustand si no tiene el user todavía
+      if (!user && state.user) {
+        setAuth(state.user, { accessToken: state.accessToken, refreshToken: state.refreshToken })
+      }
+      setReady(true)
     } catch {
-      router.push('/login')
+      router.replace('/login')
     }
   }, [])
 
-  if (!user) return null
+  if (!ready) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600" />
+    </div>
+  )
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
