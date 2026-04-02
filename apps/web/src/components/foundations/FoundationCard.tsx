@@ -8,9 +8,9 @@ interface Props {
 export function FoundationCard({ foundation }: Props) {
   return (
     <Link href={`/fundaciones/${foundation.slug}`}>
-      <div className="bg-white border border-gray-100 rounded-2xl p-5 hover:shadow-md hover:border-brand-200 transition-all group">
+      <div className="bg-white border border-gray-100 rounded-2xl p-5 hover:shadow-md hover:border-primary-200 transition-all group">
         <div className="flex items-start gap-4">
-          <div className="w-14 h-14 rounded-xl bg-brand-50 flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
+          <div className="w-14 h-14 rounded-xl bg-primary-50 flex items-center justify-center text-2xl flex-shrink-0 overflow-hidden">
             {foundation.logo ? (
               <img src={foundation.logo} alt={foundation.name} className="w-full h-full object-cover" />
             ) : (
@@ -19,7 +19,7 @@ export function FoundationCard({ foundation }: Props) {
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-gray-900 group-hover:text-brand-600 transition truncate">
+              <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition truncate">
                 {foundation.name}
               </h3>
               {foundation.verified && (

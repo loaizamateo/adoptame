@@ -101,7 +101,7 @@ export default function DashboardPage() {
         <div className="bg-white border border-gray-100 rounded-2xl p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-gray-900">Solicitudes</h2>
-            <Link href="/dashboard/solicitudes" className="text-sm text-brand-600 hover:underline">Ver todas</Link>
+            <Link href="/dashboard/solicitudes" className="text-sm text-primary-600 hover:underline">Ver todas</Link>
           </div>
           <div className="space-y-3">
             {[
@@ -133,9 +133,9 @@ export default function DashboardPage() {
                 const monthLabel = new Date(m._id + '-01').toLocaleDateString('es-CO', { month: 'short' })
                 return (
                   <div key={m._id} className="flex-1 flex flex-col items-center gap-1">
-                    <span className="text-xs font-semibold text-brand-600">{m.count}</span>
+                    <span className="text-xs font-semibold text-primary-600">{m.count}</span>
                     <div
-                      className="w-full bg-brand-100 rounded-t-lg transition-all"
+                      className="w-full bg-primary-100 rounded-t-lg transition-all"
                       style={{ height: `${height}%`, minHeight: 4 }}
                     />
                     <span className="text-xs text-gray-400">{monthLabel}</span>

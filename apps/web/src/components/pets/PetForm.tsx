@@ -105,7 +105,7 @@ export default function PetForm({ pet }: Props) {
               </div>
             ))}
             {photos.length < 8 && (
-              <label className="w-20 h-20 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400 cursor-pointer hover:border-brand-400 transition">
+              <label className="w-20 h-20 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400 cursor-pointer hover:border-primary-400 transition">
                 {uploading ? '...' : '+'}
                 <input type="file" accept="image/*" multiple className="sr-only" onChange={handlePhotoUpload} />
               </label>
@@ -118,7 +118,7 @@ export default function PetForm({ pet }: Props) {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="text-sm font-medium text-gray-700">Especie *</label>
-            <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-500" {...register('species')}>
+            <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" {...register('species')}>
               <option value="dog">🐶 Perro</option>
               <option value="cat">🐱 Gato</option>
               <option value="other">🐾 Otro</option>
@@ -130,7 +130,7 @@ export default function PetForm({ pet }: Props) {
         <div className="grid grid-cols-3 gap-4">
           <div>
             <label className="text-sm font-medium text-gray-700">Edad *</label>
-            <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-500" {...register('age')}>
+            <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" {...register('age')}>
               <option value="puppy">Cachorro</option>
               <option value="young">Joven</option>
               <option value="adult">Adulto</option>
@@ -139,7 +139,7 @@ export default function PetForm({ pet }: Props) {
           </div>
           <div>
             <label className="text-sm font-medium text-gray-700">Tamaño *</label>
-            <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-500" {...register('size')}>
+            <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" {...register('size')}>
               <option value="small">Pequeño</option>
               <option value="medium">Mediano</option>
               <option value="large">Grande</option>
@@ -147,7 +147,7 @@ export default function PetForm({ pet }: Props) {
           </div>
           <div>
             <label className="text-sm font-medium text-gray-700">Sexo *</label>
-            <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-500" {...register('sex')}>
+            <select className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500" {...register('sex')}>
               <option value="female">Hembra ♀</option>
               <option value="male">Macho ♂</option>
             </select>
@@ -161,13 +161,13 @@ export default function PetForm({ pet }: Props) {
 
         <div>
           <label className="text-sm font-medium text-gray-700 block mb-1">Descripción *</label>
-          <textarea rows={3} placeholder="Describe la personalidad y características de la mascota..." className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-500 resize-none" {...register('description')} />
+          <textarea rows={3} placeholder="Describe la personalidad y características de la mascota..." className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500 resize-none" {...register('description')} />
           {errors.description && <p className="text-xs text-red-500 mt-1">{errors.description.message}</p>}
         </div>
 
         <div>
           <label className="text-sm font-medium text-gray-700 block mb-1">Historia (opcional)</label>
-          <textarea rows={2} placeholder="¿Cómo llegó a la fundación? ¿Qué pasó antes?" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-500 resize-none" {...register('story')} />
+          <textarea rows={2} placeholder="¿Cómo llegó a la fundación? ¿Qué pasó antes?" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500 resize-none" {...register('story')} />
         </div>
 
         {/* Checkboxes */}
@@ -183,7 +183,7 @@ export default function PetForm({ pet }: Props) {
               { name: 'urgent', label: '🚨 Caso urgente' },
             ].map((cb) => (
               <label key={cb.name} className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="rounded accent-brand-600" {...register(cb.name as any)} />
+                <input type="checkbox" className="rounded accent-primary-600" {...register(cb.name as any)} />
                 <span className="text-sm text-gray-700">{cb.label}</span>
               </label>
             ))}

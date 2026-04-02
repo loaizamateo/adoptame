@@ -17,15 +17,15 @@ export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-bold text-xl text-brand-600">
+        <Link href="/" className="flex items-center gap-2 font-bold text-xl text-primary-600">
           <span>🐾</span>
           <span>Adoptame</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
-          <Link href="/adoptar" className="hover:text-brand-600 transition">Adoptar</Link>
-          <Link href="/fundaciones" className="hover:text-brand-600 transition">Fundaciones</Link>
-          <Link href="https://github.com/loaizamateo/adoptame" target="_blank" className="hover:text-brand-600 transition">
+          <Link href="/adoptar" className="hover:text-primary-600 transition">Adoptar</Link>
+          <Link href="/fundaciones" className="hover:text-primary-600 transition">Fundaciones</Link>
+          <Link href="https://github.com/loaizamateo/adoptame" target="_blank" className="hover:text-primary-600 transition">
             Open Source ⭐
           </Link>
         </div>
@@ -39,7 +39,7 @@ export function Navbar() {
                 </Link>
               )}
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-semibold text-sm">
+                <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-semibold text-sm">
                   {user.name[0].toUpperCase()}
                 </div>
                 <Button variant="ghost" size="sm" onClick={handleLogout}>Salir</Button>

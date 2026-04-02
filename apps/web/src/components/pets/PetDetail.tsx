@@ -45,7 +45,7 @@ export default function PetDetail({ id }: Props) {
       <div className="container mx-auto px-4 py-20 text-center">
         <span className="text-5xl block mb-4">😢</span>
         <h1 className="text-xl font-bold">Mascota no encontrada</h1>
-        <Link href="/adoptar" className="text-brand-600 mt-2 inline-block hover:underline">
+        <Link href="/adoptar" className="text-primary-600 mt-2 inline-block hover:underline">
           Ver otras mascotas
         </Link>
       </div>
@@ -62,9 +62,9 @@ export default function PetDetail({ id }: Props) {
       <main className="container mx-auto px-4 py-8 max-w-5xl">
         {/* Breadcrumb */}
         <nav className="text-sm text-gray-400 mb-6 flex items-center gap-2">
-          <Link href="/" className="hover:text-brand-600">Inicio</Link>
+          <Link href="/" className="hover:text-primary-600">Inicio</Link>
           <span>/</span>
-          <Link href="/adoptar" className="hover:text-brand-600">Adoptar</Link>
+          <Link href="/adoptar" className="hover:text-primary-600">Adoptar</Link>
           <span>/</span>
           <span className="text-gray-600 font-medium">{pet.name}</span>
         </nav>
@@ -100,7 +100,7 @@ export default function PetDetail({ id }: Props) {
                   <button
                     key={i}
                     onClick={() => setActivePhoto(i)}
-                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition relative ${i === activePhoto ? 'border-brand-500' : 'border-transparent'}`}
+                    className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition relative ${i === activePhoto ? 'border-primary-500' : 'border-transparent'}`}
                   >
                     <Image src={photo} alt="" fill className="object-cover" sizes="64px" />
                   </button>
@@ -146,7 +146,7 @@ export default function PetDetail({ id }: Props) {
             {/* Fundación */}
             {foundation && (
               <Link href={`/fundaciones/${foundation.slug || foundation._id}`}>
-                <div className="mt-5 p-3 bg-gray-50 rounded-xl flex items-center gap-3 hover:bg-brand-50 transition">
+                <div className="mt-5 p-3 bg-gray-50 rounded-xl flex items-center gap-3 hover:bg-primary-50 transition">
                   <div className="w-10 h-10 rounded-xl bg-white border flex items-center justify-center text-xl overflow-hidden relative flex-shrink-0">
                     {foundation.logo
                       ? <Image src={foundation.logo} alt="" fill className="object-cover" sizes="40px" />
@@ -181,7 +181,7 @@ export default function PetDetail({ id }: Props) {
                     </Link>
                     <p className="text-center text-xs text-gray-400">
                       ¿Ya tienes cuenta?{' '}
-                      <Link href={`/login?redirect=/mascotas/${pet._id}/adoptar`} className="text-brand-600 hover:underline">
+                      <Link href={`/login?redirect=/mascotas/${pet._id}/adoptar`} className="text-primary-600 hover:underline">
                         Inicia sesión
                       </Link>
                     </p>
@@ -208,7 +208,7 @@ export default function PetDetail({ id }: Props) {
                     navigator.clipboard.writeText(window.location.href)
                   }
                 }}
-                className="flex-1 py-2 rounded-full border border-gray-200 text-sm text-gray-500 hover:border-brand-400 hover:text-brand-600 transition"
+                className="flex-1 py-2 rounded-full border border-gray-200 text-sm text-gray-500 hover:border-primary-400 hover:text-primary-600 transition"
               >
                 🔗 Compartir perfil
               </button>
@@ -238,7 +238,7 @@ function Badge({ children, color }: { children: React.ReactNode; color: string }
   const colors: Record<string, string> = {
     green: 'bg-green-50 text-green-700',
     blue: 'bg-blue-50 text-blue-700',
-    purple: 'bg-purple-50 text-purple-700',
+    purple: 'bg-primary-50 text-primary-700',
     yellow: 'bg-yellow-50 text-yellow-700',
     orange: 'bg-orange-50 text-orange-700',
   }

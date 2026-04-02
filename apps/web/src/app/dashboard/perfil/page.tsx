@@ -67,7 +67,7 @@ export default function DashboardProfilePage() {
             <label className="text-sm font-medium text-gray-700 block mb-1">Descripción *</label>
             <textarea
               rows={4}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-500 resize-none"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500 resize-none"
               {...register('description')}
             />
             {errors.description && <p className="text-xs text-red-500 mt-1">{errors.description.message}</p>}

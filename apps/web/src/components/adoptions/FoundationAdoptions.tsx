@@ -19,7 +19,7 @@ const STATUS_COLOR: Record<string, string> = {
   reviewing: 'bg-blue-50 text-blue-700 border-blue-200',
   approved:  'bg-green-50 text-green-700 border-green-200',
   rejected:  'bg-red-50 text-red-700 border-red-200',
-  completed: 'bg-purple-50 text-purple-700 border-purple-200',
+  completed: 'bg-primary-50 text-primary-700 border-primary-200',
 }
 
 export default function FoundationAdoptions() {
@@ -58,7 +58,7 @@ export default function FoundationAdoptions() {
             key={s.value}
             onClick={() => setFilter(s.value)}
             className={`px-3 py-1.5 rounded-full text-sm font-medium border transition ${
-              filter === s.value ? 'bg-brand-600 text-white border-brand-600' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-400'
+              filter === s.value ? 'bg-primary-600 text-white border-primary-600' : 'bg-white text-gray-600 border-gray-200 hover:border-primary-400'
             }`}
           >
             {s.label}
@@ -132,7 +132,7 @@ export default function FoundationAdoptions() {
                         placeholder="Nota para el adoptante (opcional)..."
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-500 resize-none mb-3"
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500 resize-none mb-3"
                       />
                       <div className="flex gap-2 flex-wrap">
                         {a.status === 'pending' && (

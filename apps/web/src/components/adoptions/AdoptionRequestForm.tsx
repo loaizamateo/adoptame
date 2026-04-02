@@ -72,7 +72,7 @@ export default function AdoptionRequestForm({ petId }: Props) {
             ].map((opt) => (
               <label
                 key={opt.value}
-                className="flex flex-col items-center gap-1 border rounded-xl p-3 cursor-pointer hover:border-brand-400 transition has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50"
+                className="flex flex-col items-center gap-1 border rounded-xl p-3 cursor-pointer hover:border-primary-400 transition has-[:checked]:border-primary-600 has-[:checked]:bg-primary-50"
               >
                 <input type="radio" value={opt.value} className="sr-only" {...register('housingType')} />
                 <span className="text-2xl">{opt.emoji}</span>
@@ -94,7 +94,7 @@ export default function AdoptionRequestForm({ petId }: Props) {
             ].map((opt) => (
               <label
                 key={opt.value}
-                className="flex flex-col items-center gap-1 border rounded-xl p-3 cursor-pointer hover:border-brand-400 transition has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50"
+                className="flex flex-col items-center gap-1 border rounded-xl p-3 cursor-pointer hover:border-primary-400 transition has-[:checked]:border-primary-600 has-[:checked]:bg-primary-50"
               >
                 <input type="radio" value={opt.value} className="sr-only" {...register('experience')} />
                 <span className="text-2xl">{opt.emoji}</span>
@@ -112,8 +112,8 @@ export default function AdoptionRequestForm({ petId }: Props) {
             { name: 'hasPets', label: '🐾 Ya tiene mascotas' },
             { name: 'hasChildren', label: '👶 Hay niños en casa' },
           ].map((cb) => (
-            <label key={cb.name} className="flex items-center gap-2 cursor-pointer border rounded-xl p-3 hover:border-brand-300 transition has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50">
-              <input type="checkbox" className="accent-brand-600" {...register(cb.name as any)} />
+            <label key={cb.name} className="flex items-center gap-2 cursor-pointer border rounded-xl p-3 hover:border-primary-300 transition has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50">
+              <input type="checkbox" className="accent-primary-600" {...register(cb.name as any)} />
               <span className="text-xs text-gray-700">{cb.label}</span>
             </label>
           ))}
@@ -127,7 +127,7 @@ export default function AdoptionRequestForm({ petId }: Props) {
           <textarea
             rows={2}
             placeholder="Ej: Trabajo desde casa, salgo 2h al día. Los fines de semana estoy en casa todo el día."
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-500 resize-none"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500 resize-none"
             {...register('workSchedule')}
           />
           {errors.workSchedule && <p className="text-xs text-red-500">{errors.workSchedule.message}</p>}
@@ -141,7 +141,7 @@ export default function AdoptionRequestForm({ petId }: Props) {
           <textarea
             rows={3}
             placeholder="Cuéntanos qué te motivó a elegir esta mascota y qué puedes ofrecerle..."
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-500 resize-none"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500 resize-none"
             {...register('motivation')}
           />
           {errors.motivation && <p className="text-xs text-red-500">{errors.motivation.message}</p>}
@@ -155,7 +155,7 @@ export default function AdoptionRequestForm({ petId }: Props) {
           <textarea
             rows={2}
             placeholder="Referencias, información adicional..."
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-500 resize-none"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500 resize-none"
             {...register('additionalInfo')}
           />
         </div>

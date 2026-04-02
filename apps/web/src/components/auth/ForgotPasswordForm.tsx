@@ -32,7 +32,7 @@ export default function ForgotPasswordForm() {
         <p className="text-gray-500 text-sm mb-4">
           Si el email está registrado, recibirás instrucciones para recuperar tu contraseña.
         </p>
-        <Link href="/login" className="text-brand-600 text-sm font-semibold hover:underline">
+        <Link href="/login" className="text-primary-600 text-sm font-semibold hover:underline">
           Volver al inicio de sesión
         </Link>
       </Card>
@@ -53,7 +53,7 @@ export default function ForgotPasswordForm() {
           Enviar instrucciones
         </Button>
         <p className="text-center text-sm text-gray-500">
-          <Link href="/login" className="text-brand-600 hover:underline">
+          <Link href="/login" className="text-primary-600 hover:underline">
             Volver al inicio de sesión
           </Link>
         </p>

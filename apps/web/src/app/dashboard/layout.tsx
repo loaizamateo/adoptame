@@ -31,7 +31,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <aside className="w-56 bg-white border-r border-gray-100 flex flex-col fixed h-full top-0 pt-16">
         <div className="p-4 border-b border-gray-100">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold text-sm">
+            <div className="w-9 h-9 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-bold text-sm">
               {user.name[0].toUpperCase()}
             </div>
             <div className="min-w-0">
@@ -51,7 +51,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 className={cn(
                   'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition mb-1',
                   active
-                    ? 'bg-brand-50 text-brand-700'
+                    ? 'bg-primary-50 text-primary-700'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                 )}
               >

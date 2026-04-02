@@ -54,7 +54,7 @@ export default function LoginForm() {
             {...register('password')}
           />
           <div className="text-right mt-1">
-            <Link href="/forgot-password" className="text-xs text-brand-600 hover:underline">
+            <Link href="/forgot-password" className="text-xs text-primary-600 hover:underline">
               ¿Olvidaste tu contraseña?
             </Link>
           </div>
@@ -70,7 +70,7 @@ export default function LoginForm() {
 
         <p className="text-center text-sm text-gray-500">
           ¿No tienes cuenta?{' '}
-          <Link href="/register" className="text-brand-600 font-semibold hover:underline">
+          <Link href="/register" className="text-primary-600 font-semibold hover:underline">
             Regístrate gratis
           </Link>
         </p>

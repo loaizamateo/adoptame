@@ -79,7 +79,7 @@ export default function PetsExplorer() {
               placeholder="Nombre, raza..."
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1) }}
-              className="mt-1.5 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-brand-500"
+              className="mt-1.5 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-primary-500"
             />
           </div>
 
@@ -93,7 +93,7 @@ export default function PetsExplorer() {
                   onClick={() => setFilter('species', s.value as any)}
                   className={`flex flex-col items-center py-2 rounded-xl border text-xs font-medium transition ${
                     (filters.species ?? '') === s.value
-                      ? 'border-brand-500 bg-brand-50 text-brand-700'
+                      ? 'border-primary-500 bg-primary-50 text-primary-700'
                       : 'border-gray-100 hover:border-gray-300 text-gray-600'
                   }`}
                 >
@@ -110,7 +110,7 @@ export default function PetsExplorer() {
             <select
               value={filters.size ?? ''}
               onChange={(e) => setFilter('size', e.target.value as any)}
-              className="mt-1.5 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-brand-500"
+              className="mt-1.5 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-primary-500"
             >
               {SIZES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
             </select>
@@ -122,7 +122,7 @@ export default function PetsExplorer() {
             <select
               value={filters.age ?? ''}
               onChange={(e) => setFilter('age', e.target.value as any)}
-              className="mt-1.5 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-brand-500"
+              className="mt-1.5 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-primary-500"
             >
               {AGES.map((a) => <option key={a.value} value={a.value}>{a.label}</option>)}
             </select>
@@ -136,7 +136,7 @@ export default function PetsExplorer() {
               placeholder="Bogotá, Medellín..."
               value={filters.city ?? ''}
               onChange={(e) => setFilter('city', e.target.value)}
-              className="mt-1.5 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-brand-500"
+              className="mt-1.5 w-full border border-gray-200 rounded-lg px-3 py-1.5 text-sm outline-none focus:border-primary-500"
             />
           </div>
 
@@ -146,7 +146,7 @@ export default function PetsExplorer() {
               type="checkbox"
               checked={filters.urgent === true}
               onChange={(e) => setFilter('urgent', e.target.checked ? true : undefined)}
-              className="rounded accent-brand-600"
+              className="rounded accent-primary-600"
             />
             <span className="text-sm text-gray-700">🚨 Solo urgentes</span>
           </label>
@@ -154,7 +154,7 @@ export default function PetsExplorer() {
           {/* Limpiar */}
           <button
             onClick={() => { setFilters({}); setSearch(''); setPage(1) }}
-            className="text-xs text-gray-400 hover:text-brand-600 transition"
+            className="text-xs text-gray-400 hover:text-primary-600 transition"
           >
             Limpiar filtros
           </button>
