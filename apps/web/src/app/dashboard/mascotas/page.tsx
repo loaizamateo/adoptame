@@ -12,7 +12,7 @@ import { useAuthStore } from '@/store/auth'
 const STATUS_COLORS: Record<string, string> = {
   available:  'bg-green-50 text-green-700 border-green-200',
   in_process: 'bg-blue-50 text-blue-700 border-blue-200',
-  adopted:    'bg-purple-50 text-purple-700 border-purple-200',
+  adopted:    'bg-primary-50 text-primary-700 border-primary-200',
 }
 const STATUS_LABELS: Record<string, string> = {
   available: '✅ Disponible', in_process: '⏳ En proceso', adopted: '🏠 Adoptado',

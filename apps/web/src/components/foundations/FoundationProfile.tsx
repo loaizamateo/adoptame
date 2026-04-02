@@ -33,7 +33,7 @@ export default function FoundationProfile({ slug }: Props) {
       <div className="container mx-auto px-4 py-20 text-center">
         <span className="text-5xl block mb-4">😢</span>
         <h1 className="text-xl font-bold text-gray-900">Fundación no encontrada</h1>
-        <Link href="/fundaciones" className="text-brand-600 mt-2 inline-block hover:underline">
+        <Link href="/fundaciones" className="text-primary-600 mt-2 inline-block hover:underline">
           Ver todas las fundaciones
         </Link>
       </div>
@@ -46,9 +46,9 @@ export default function FoundationProfile({ slug }: Props) {
     <main className="container mx-auto px-4 py-10 max-w-4xl">
       {/* Breadcrumb */}
       <nav className="text-sm text-gray-400 mb-6 flex items-center gap-2">
-        <Link href="/" className="hover:text-brand-600">Inicio</Link>
+        <Link href="/" className="hover:text-primary-600">Inicio</Link>
         <span>/</span>
-        <Link href="/fundaciones" className="hover:text-brand-600">Fundaciones</Link>
+        <Link href="/fundaciones" className="hover:text-primary-600">Fundaciones</Link>
         <span>/</span>
         <span className="text-gray-600 font-medium">{foundation.name}</span>
       </nav>
@@ -56,7 +56,7 @@ export default function FoundationProfile({ slug }: Props) {
       {/* Header */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
         <div className="flex items-start gap-5">
-          <div className="w-20 h-20 rounded-2xl bg-brand-50 flex items-center justify-center text-4xl flex-shrink-0 overflow-hidden relative">
+          <div className="w-20 h-20 rounded-2xl bg-primary-50 flex items-center justify-center text-4xl flex-shrink-0 overflow-hidden relative">
             {foundation.logo
               ? <Image src={foundation.logo} alt={foundation.name} fill className="object-cover" sizes="80px" />
               : '🐾'}
@@ -74,16 +74,16 @@ export default function FoundationProfile({ slug }: Props) {
             <p className="text-gray-700 mt-3 leading-relaxed">{foundation.description}</p>
             <div className="flex gap-4 mt-4 text-sm flex-wrap">
               {foundation.website && (
-                <a href={foundation.website} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">🌐 Sitio web</a>
+                <a href={foundation.website} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">🌐 Sitio web</a>
               )}
               {foundation.instagram && (
-                <a href={`https://instagram.com/${foundation.instagram.replace('@','')}`} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">📸 Instagram</a>
+                <a href={`https://instagram.com/${foundation.instagram.replace('@','')}`} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">📸 Instagram</a>
               )}
               {foundation.facebook && (
-                <a href={`https://facebook.com/${foundation.facebook}`} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">👤 Facebook</a>
+                <a href={`https://facebook.com/${foundation.facebook}`} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">👤 Facebook</a>
               )}
               {foundation.phone && (
-                <a href={`https://wa.me/${foundation.phone.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">💬 WhatsApp</a>
+                <a href={`https://wa.me/${foundation.phone.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">💬 WhatsApp</a>
               )}
             </div>
           </div>
@@ -124,7 +124,7 @@ export default function FoundationProfile({ slug }: Props) {
                     )}
                   </div>
                   <div className="p-3">
-                    <p className="font-semibold text-gray-900 group-hover:text-brand-600 transition">{pet.name}</p>
+                    <p className="font-semibold text-gray-900 group-hover:text-primary-600 transition">{pet.name}</p>
                     <p className="text-xs text-gray-400">{pet.breed || pet.species}</p>
                   </div>
                 </div>

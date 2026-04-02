@@ -26,7 +26,7 @@ export function DonationSection({ foundationName, links }: Props) {
   if (available.length === 0) return null
 
   return (
-    <div className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100 rounded-2xl p-5 mt-6">
+    <div className="bg-gradient-to-br from-primary-50 to-pink-50 border border-primary-100 rounded-2xl p-5 mt-6">
       <div className="flex items-center gap-2 mb-4">
         <span className="text-2xl">❤️</span>
         <div>

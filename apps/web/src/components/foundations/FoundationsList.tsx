@@ -40,7 +40,7 @@ export default function FoundationsList() {
           placeholder="Buscar por nombre o ciudad..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full max-w-sm border border-gray-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-brand-500"
+          className="w-full max-w-sm border border-gray-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-primary-500"
         />
       </div>
 

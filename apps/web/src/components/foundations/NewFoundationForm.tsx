@@ -54,7 +54,7 @@ export default function NewFoundationForm() {
           <textarea
             rows={4}
             placeholder="Cuéntanos sobre tu organización, misión y cómo ayudan a las mascotas..."
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-brand-500 resize-none"
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-primary-500 resize-none"
             {...register('description')}
           />
           {errors.description && <p className="text-xs text-red-500">{errors.description.message}</p>}

@@ -8,7 +8,7 @@ interface Props { pet: Pet }
 export function PetCard({ pet }: Props) {
   return (
     <Link href={`/mascotas/${pet._id}`} prefetch={false}>
-      <article className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-md hover:border-brand-200 transition-all group cursor-pointer">
+      <article className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-md hover:border-primary-200 transition-all group cursor-pointer">
         {/* Foto */}
         <div className="aspect-square bg-gray-50 relative overflow-hidden">
           {pet.photos?.[0] ? (
@@ -37,7 +37,7 @@ export function PetCard({ pet }: Props) {
 
         {/* Info */}
         <div className="p-3">
-          <h3 className="font-semibold text-gray-900 group-hover:text-brand-600 transition">
+          <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition">
             {pet.name}
           </h3>
           <p className="text-xs text-gray-400 mt-0.5">

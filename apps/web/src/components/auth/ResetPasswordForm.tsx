@@ -40,7 +40,7 @@ export default function ResetPasswordForm() {
     return (
       <Card className="text-center">
         <p className="text-red-500">Enlace inválido. Solicita uno nuevo.</p>
-        <Link href="/forgot-password" className="text-brand-600 text-sm mt-2 inline-block hover:underline">
+        <Link href="/forgot-password" className="text-primary-600 text-sm mt-2 inline-block hover:underline">
           Solicitar nuevo enlace
         </Link>
       </Card>

@@ -69,7 +69,7 @@ export default function RegisterForm() {
             ].map((opt) => (
               <label
                 key={opt.value}
-                className="flex flex-col items-center gap-1 border rounded-xl p-3 cursor-pointer hover:border-brand-400 transition has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50"
+                className="flex flex-col items-center gap-1 border rounded-xl p-3 cursor-pointer hover:border-primary-400 transition has-[:checked]:border-primary-600 has-[:checked]:bg-primary-50"
               >
                 <input type="radio" value={opt.value} className="sr-only" {...register('role')} />
                 <span className="text-2xl">{opt.emoji}</span>
@@ -89,7 +89,7 @@ export default function RegisterForm() {
 
         <p className="text-center text-sm text-gray-500">
           ¿Ya tienes cuenta?{' '}
-          <Link href="/login" className="text-brand-600 font-semibold hover:underline">
+          <Link href="/login" className="text-primary-600 font-semibold hover:underline">
             Inicia sesión
           </Link>
         </p>
