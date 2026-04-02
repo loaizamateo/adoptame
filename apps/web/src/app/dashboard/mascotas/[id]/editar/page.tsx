@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { EditPetForm } from '@/components/pets/EditPetForm'
+import PetForm from '@/components/pets/PetForm'
 import { getPetById } from '@/lib/pets'
 import type { Pet } from '@adoptame/types'
 
@@ -20,5 +20,5 @@ function EditPetPageClient({ id }: { id: string }) {
   }, [id])
 
   if (!pet) return null
-  return <EditPetForm pet={pet} />
+  return <PetForm pet={pet} />
 }
