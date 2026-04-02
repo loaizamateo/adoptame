@@ -19,7 +19,7 @@ export function Navbar() {
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-soft">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.jpg" alt="Adoptame" width={36} height={36} className="rounded-lg object-cover" />
+          <Image src="/logo.png" alt="Adoptame" width={36} height={36} className="object-contain" />
           <span className="font-bold text-xl text-primary-600">Adoptame</span>
         </Link>
 
