@@ -3,14 +3,14 @@
 import { useEffect, useState } from 'react'
 import { getFoundationBySlug } from '@/lib/foundations'
 import type { Foundation, Pet } from '@adoptame/types'
+import { DonationSection } from './DonationSection'
 import Link from 'next/link'
+import Image from 'next/image'
 
-interface Props {
-  slug: string
-}
+interface Props { slug: string }
 
 export default function FoundationProfile({ slug }: Props) {
-  const [data, setData] = useState<{ foundation: Foundation; pets: Pet[] } | null>(null)
+  const [data, setData] = useState<{ foundation: Foundation & { donationLinks?: any }; pets: Pet[] } | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -21,7 +21,11 @@ export default function FoundationProfile({ slug }: Props) {
   }, [slug])
 
   if (loading) {
-    return <div className="container mx-auto px-4 py-10 animate-pulse"><div className="h-40 bg-gray-100 rounded-2xl" /></div>
+    return (
+      <div className="container mx-auto px-4 py-10 animate-pulse">
+        <div className="h-40 bg-gray-100 rounded-2xl" />
+      </div>
+    )
   }
 
   if (!data) {
@@ -40,13 +44,22 @@ export default function FoundationProfile({ slug }: Props) {
 
   return (
     <main className="container mx-auto px-4 py-10 max-w-4xl">
+      {/* Breadcrumb */}
+      <nav className="text-sm text-gray-400 mb-6 flex items-center gap-2">
+        <Link href="/" className="hover:text-brand-600">Inicio</Link>
+        <span>/</span>
+        <Link href="/fundaciones" className="hover:text-brand-600">Fundaciones</Link>
+        <span>/</span>
+        <span className="text-gray-600 font-medium">{foundation.name}</span>
+      </nav>
+
       {/* Header */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-8">
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
         <div className="flex items-start gap-5">
-          <div className="w-20 h-20 rounded-2xl bg-brand-50 flex items-center justify-center text-4xl flex-shrink-0 overflow-hidden">
-            {foundation.logo ? (
-              <img src={foundation.logo} alt={foundation.name} className="w-full h-full object-cover" />
-            ) : '🐾'}
+          <div className="w-20 h-20 rounded-2xl bg-brand-50 flex items-center justify-center text-4xl flex-shrink-0 overflow-hidden relative">
+            {foundation.logo
+              ? <Image src={foundation.logo} alt={foundation.name} fill className="object-cover" sizes="80px" />
+              : '🐾'}
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-3 flex-wrap">
@@ -58,23 +71,29 @@ export default function FoundationProfile({ slug }: Props) {
               )}
             </div>
             <p className="text-gray-500 mt-1">📍 {foundation.city}, {foundation.country}</p>
-            <p className="text-gray-700 mt-3">{foundation.description}</p>
-            <div className="flex gap-4 mt-4 text-sm">
+            <p className="text-gray-700 mt-3 leading-relaxed">{foundation.description}</p>
+            <div className="flex gap-4 mt-4 text-sm flex-wrap">
               {foundation.website && (
                 <a href={foundation.website} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">🌐 Sitio web</a>
               )}
               {foundation.instagram && (
-                <a href={`https://instagram.com/${foundation.instagram}`} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">📸 Instagram</a>
+                <a href={`https://instagram.com/${foundation.instagram.replace('@','')}`} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">📸 Instagram</a>
               )}
               {foundation.facebook && (
                 <a href={`https://facebook.com/${foundation.facebook}`} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">👤 Facebook</a>
               )}
               {foundation.phone && (
-                <a href={`tel:${foundation.phone}`} className="text-brand-600 hover:underline">📞 {foundation.phone}</a>
+                <a href={`https://wa.me/${foundation.phone.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">💬 WhatsApp</a>
               )}
             </div>
           </div>
         </div>
+
+        {/* Sección de donaciones */}
+        <DonationSection
+          foundationName={foundation.name}
+          links={(foundation as any).donationLinks}
+        />
       </div>
 
       {/* Mascotas disponibles */}
@@ -94,16 +113,14 @@ export default function FoundationProfile({ slug }: Props) {
                 <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-md transition group">
                   <div className="aspect-square bg-gray-50 relative">
                     {pet.photos?.[0] ? (
-                      <img src={pet.photos[0]} alt={pet.name} className="w-full h-full object-cover" />
+                      <Image src={pet.photos[0]} alt={pet.name} fill className="object-cover" sizes="(max-width: 768px) 50vw, 33vw" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-5xl">
                         {pet.species === 'dog' ? '🐶' : pet.species === 'cat' ? '🐱' : '🐾'}
                       </div>
                     )}
                     {pet.urgent && (
-                      <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
-                        Urgente
-                      </span>
+                      <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">Urgente</span>
                     )}
                   </div>
                   <div className="p-3">
