@@ -1,0 +1,52 @@
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import FoundationProfile from '@/components/foundations/FoundationProfile'
+
+interface Props { params: Promise<{ slug: string }> }
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/foundations/${slug}`,
+      { next: { revalidate: 3600 } }
+    )
+    if (!res.ok) return { title: 'Fundación | Adoptame' }
+    const { data: { foundation } } = await res.json()
+
+    const title = `${foundation.name} — Fundación en ${foundation.city} | Adoptame`
+    const description = `${foundation.description.slice(0, 155)}`
+    const image = foundation.logo ?? 'https://adoptame.app/og-default.png'
+
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        url: `https://adoptame.app/fundaciones/${slug}`,
+        siteName: 'Adoptame',
+        images: [{ url: image, width: 1200, height: 630, alt: foundation.name }],
+        locale: 'es_CO',
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title,
+        description,
+        images: [image],
+      },
+      alternates: {
+        canonical: `https://adoptame.app/fundaciones/${slug}`,
+      },
+    }
+  } catch {
+    return { title: 'Fundación | Adoptame' }
+  }
+}
+
+export default async function FoundationPage({ params }: Props) {
+  const { slug } = await params
+  if (!slug) notFound()
+  return <FoundationProfile slug={slug} />
+}

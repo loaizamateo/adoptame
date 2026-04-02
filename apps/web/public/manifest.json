@@ -1,0 +1,14 @@
+{
+  "name": "Adoptame",
+  "short_name": "Adoptame",
+  "description": "Plataforma open source de adopción animal para Latinoamérica",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#9333ea",
+  "lang": "es",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@adoptame/api",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "lint": "tsc --noEmit",
+    "test": "jest",
+    "clean": "rm -rf dist",
+    "seed": "tsx src/seed/seed.ts"
+  },
+  "dependencies": {
+    "@adoptame/schemas": "*",
+    "@adoptame/types": "*",
+    "@aws-sdk/client-s3": "^3.726.1",
+    "@aws-sdk/s3-request-presigner": "^3.726.1",
+    "bcryptjs": "^2.4.3",
+    "fastify": "^5.2.1",
+    "@fastify/cors": "^10.0.2",
+    "@fastify/helmet": "^13.0.1",
+    "@fastify/multipart": "^9.0.3",
+    "@fastify/jwt": "^9.0.3",
+    "@fastify/rate-limit": "^10.2.1",
+    "mongoose": "^8.9.5",
+    "resend": "^4.1.2",
+    "slugify": "^1.6.6",
+    "zod": "^3.24.1",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.10.7",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

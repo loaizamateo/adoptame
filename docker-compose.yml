@@ -1,0 +1,49 @@
+version: '3.9'
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: adoptame-mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: adoptame
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile.dev
+    container_name: adoptame-api
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./apps/api:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://mongodb:27017/adoptame
+    depends_on:
+      - mongodb
+    env_file:
+      - ./apps/api/.env
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile.dev
+    container_name: adoptame-web
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+      - /app/.next
+    env_file:
+      - ./apps/web/.env
+    depends_on:
+      - api
+
+volumes:
+  mongo-data:

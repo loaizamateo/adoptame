@@ -1,0 +1,24 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import PetForm from '@/components/pets/PetForm'
+import { getPetById } from '@/lib/pets'
+import type { Pet } from '@adoptame/types'
+
+interface Props { params: Promise<{ id: string }> }
+
+export default async function EditPetPage({ params }: Props) {
+  const { id } = await params
+  return <EditPetPageClient id={id} />
+}
+
+function EditPetPageClient({ id }: { id: string }) {
+  const [pet, setPet] = useState<Pet | null>(null)
+
+  useEffect(() => {
+    getPetById(id).then(setPet)
+  }, [id])
+
+  if (!pet) return null
+  return <PetForm pet={pet} />
+}
