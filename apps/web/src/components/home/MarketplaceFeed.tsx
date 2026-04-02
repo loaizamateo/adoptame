@@ -24,7 +24,7 @@ export function MarketplaceFeed() {
   const [species, setSpecies] = useState<PetSpecies | ''>('')
   const [fallback, setFallback] = useState(false)
 
-  const fetchPets = useCallback(async (city: string, country: string, sp: string) => {
+  const fetchPets = useCallback(async (city: string, country: string, sp: PetSpecies | '') => {
     setLoading(true)
     setFallback(false)
     try {
