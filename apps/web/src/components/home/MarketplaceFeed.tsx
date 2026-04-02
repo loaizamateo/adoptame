@@ -7,7 +7,7 @@ import { PetCard } from '@/components/pets/PetCard'
 import { PetCardSkeleton } from '@/components/pets/PetCardSkeleton'
 import { LocationPill } from './LocationPill'
 import { useLocation } from '@/hooks/useLocation'
-import type { Pet } from '@adoptame/types'
+import type { Pet, PetSpecies } from '@adoptame/types'
 
 const SPECIES = [
   { value: '', label: 'Todos', emoji: '🐾' },
@@ -21,7 +21,7 @@ export function MarketplaceFeed() {
   const [pets, setPets] = useState<Pet[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
-  const [species, setSpecies] = useState('')
+  const [species, setSpecies] = useState<PetSpecies | ''>('')
   const [fallback, setFallback] = useState(false)
 
   const fetchPets = useCallback(async (city: string, country: string, sp: string) => {
