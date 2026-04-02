@@ -61,8 +61,7 @@ async function seed() {
   const userMap: Record<string, any> = {}
 
   for (const u of USERS_DATA) {
-    const hashed = await bcrypt.hash(u.password, 12)
-    const user = await User.create({ ...u, password: hashed })
+    const user = await User.create({ ...u })
     userMap[u.email] = user
     console.log(`   ✓ ${u.role.padEnd(12)} ${u.email}`)
   }
