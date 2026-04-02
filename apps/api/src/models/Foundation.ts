@@ -14,6 +14,15 @@ export interface IFoundation extends Document {
   facebook?: string
   verified: boolean
   ownerId: mongoose.Types.ObjectId
+  // Métodos de donación directa
+  donationLinks?: {
+    nequi?: string        // Número Nequi
+    daviplata?: string    // Número Daviplata
+    paypal?: string       // Link PayPal.me
+    bancolombia?: string  // Número cuenta
+    mercadopago?: string  // Link MercadoPago
+    other?: string        // Cualquier otro link/info
+  }
 }
 
 const FoundationSchema = new Schema<IFoundation>(
@@ -30,6 +39,14 @@ const FoundationSchema = new Schema<IFoundation>(
     facebook: String,
     verified: { type: Boolean, default: false },
     ownerId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    donationLinks: {
+      nequi: String,
+      daviplata: String,
+      paypal: String,
+      bancolombia: String,
+      mercadopago: String,
+      other: String,
+    },
   },
   { timestamps: true }
 )

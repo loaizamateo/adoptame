@@ -15,3 +15,18 @@ export const updateFoundationSchema = createFoundationSchema.partial()
 
 export type CreateFoundationInput = z.infer<typeof createFoundationSchema>
 export type UpdateFoundationInput = z.infer<typeof updateFoundationSchema>
+
+export const donationLinksSchema = z.object({
+  nequi: z.string().optional(),
+  daviplata: z.string().optional(),
+  paypal: z.string().url().optional().or(z.literal('')),
+  bancolombia: z.string().optional(),
+  mercadopago: z.string().url().optional().or(z.literal('')),
+  other: z.string().optional(),
+})
+
+export const updateFoundationDonationsSchema = z.object({
+  donationLinks: donationLinksSchema,
+})
+
+export type UpdateFoundationDonationsInput = z.infer<typeof updateFoundationDonationsSchema>

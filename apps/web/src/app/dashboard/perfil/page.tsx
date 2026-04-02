@@ -7,12 +7,13 @@ import { updateFoundationSchema, type UpdateFoundationInput } from '@adoptame/sc
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
+import { DonationLinksForm } from '@/components/dashboard/DonationLinksForm'
 import { updateFoundation } from '@/lib/foundations'
 import { api } from '@/lib/api'
 import type { Foundation } from '@adoptame/types'
 
 export default function DashboardProfilePage() {
-  const [foundation, setFoundation] = useState<Foundation | null>(null)
+  const [foundation, setFoundation] = useState<(Foundation & { donationLinks?: any }) | null>(null)
   const [loading, setLoading] = useState(true)
   const [saved, setSaved] = useState(false)
   const [serverError, setServerError] = useState('')
@@ -38,7 +39,7 @@ export default function DashboardProfilePage() {
     setSaved(false)
     try {
       const updated = await updateFoundation(foundation._id, data)
-      setFoundation(updated)
+      setFoundation((prev) => ({ ...updated, donationLinks: prev?.donationLinks }))
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     } catch (err: any) {
@@ -57,6 +58,8 @@ export default function DashboardProfilePage() {
   return (
     <div className="p-8 max-w-2xl">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Perfil de la fundación</h1>
+
+      {/* Datos generales */}
       <Card>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
           <Input label="Nombre *" error={errors.name?.message} {...register('name')} />
@@ -88,6 +91,12 @@ export default function DashboardProfilePage() {
           </Button>
         </form>
       </Card>
+
+      {/* Métodos de donación */}
+      <DonationLinksForm
+        foundationId={foundation._id}
+        initialLinks={foundation.donationLinks}
+      />
     </div>
   )
 }
