@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
 import PetDetail from '@/components/pets/PetDetail'
 
-interface Props { params: { id: string } }
+interface Props { params: Promise<{ id: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/pets/${params.id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/pets/${id}`,
       { next: { revalidate: 3600 } }
     )
     if (!res.ok) return { title: 'Mascota en adopción | Adoptame' }
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       openGraph: {
         title,
         description,
-        url: `https://adoptame.app/mascotas/${params.id}`,
+        url: `https://adoptame.app/mascotas/${id}`,
         siteName: 'Adoptame',
         images: [{ url: image, width: 1200, height: 630, alt: `${pet.name} en adopción` }],
         locale: 'es_CO',
@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         images: [image],
       },
       alternates: {
-        canonical: `https://adoptame.app/mascotas/${params.id}`,
+        canonical: `https://adoptame.app/mascotas/${id}`,
       },
     }
   } catch {
@@ -56,6 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function PetPage({ params }: Props) {
-  return <PetDetail id={params.id} />
+export default async function PetPage({ params }: Props) {
+  const { id } = await params
+  return <PetDetail id={id} />
 }
