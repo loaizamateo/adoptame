@@ -2,7 +2,7 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "npm install && npx turbo run build --filter=@adoptame/schemas... --filter=@adoptame/api --no-daemon"
+    "buildCommand": "npm install && npx turbo run build --filter=@adoptame/api --no-daemon"
   },
   "deploy": {
     "startCommand": "node apps/api/dist/server.js",
