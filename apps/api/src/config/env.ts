@@ -13,6 +13,7 @@ const envSchema = z.object({
   R2_ACCESS_KEY_ID: z.string().optional(),
   R2_SECRET_ACCESS_KEY: z.string().optional(),
   R2_BUCKET_NAME: z.string().optional(),
+  R2_ENDPOINT: z.string().optional(),
   R2_PUBLIC_URL: z.string().optional(),
   RESEND_API_KEY: z.string().optional(),
   RESEND_FROM_EMAIL: z.string().default('noreply@adoptame.app'),
