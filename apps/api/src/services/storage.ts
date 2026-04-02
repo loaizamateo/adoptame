@@ -1,4 +1,5 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3'
+import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { env } from '../config/env'
 import crypto from 'crypto'
 
@@ -13,6 +14,7 @@ const s3 = env.R2_ACCESS_KEY_ID && env.R2_SECRET_ACCESS_KEY
     })
   : null
 
+// Sube archivo y devuelve el key (no la URL pública)
 export async function uploadFile(
   buffer: Buffer,
   mimeType: string,
@@ -34,11 +36,34 @@ export async function uploadFile(
     })
   )
 
-  return `${env.R2_PUBLIC_URL}/${key}`
+  return key
 }
 
-export async function deleteFile(url: string): Promise<void> {
-  if (!s3 || !env.R2_BUCKET_NAME || !env.R2_PUBLIC_URL) return
-  const key = url.replace(`${env.R2_PUBLIC_URL}/`, '')
-  await s3.send(new DeleteObjectCommand({ Bucket: env.R2_BUCKET_NAME, Key: key }))
+// Genera una pre-signed URL válida por 1 hora para un key
+export async function getSignedFileUrl(key: string): Promise<string> {
+  if (!s3 || !env.R2_BUCKET_NAME) return key
+
+  // Si ya es una URL completa (legacy), devolverla tal cual
+  if (key.startsWith('http')) return key
+
+  const command = new GetObjectCommand({
+    Bucket: env.R2_BUCKET_NAME,
+    Key: key,
+  })
+
+  return getSignedUrl(s3, command, { expiresIn: 3600 })
+}
+
+// Genera pre-signed URLs para un array de keys
+export async function signPhotoUrls(photos: string[]): Promise<string[]> {
+  return Promise.all(photos.map(getSignedFileUrl))
+}
+
+export async function deleteFile(key: string): Promise<void> {
+  if (!s3 || !env.R2_BUCKET_NAME) return
+  // Soporta tanto key como URL completa (legacy)
+  const fileKey = key.startsWith('http')
+    ? key.replace(`${env.R2_PUBLIC_URL}/`, '')
+    : key
+  await s3.send(new DeleteObjectCommand({ Bucket: env.R2_BUCKET_NAME, Key: fileKey }))
 }
