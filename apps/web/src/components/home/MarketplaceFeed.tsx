@@ -9,7 +9,7 @@ import { LocationPill } from './LocationPill'
 import { useLocation } from '@/hooks/useLocation'
 import type { Pet, PetSpecies } from '@adoptame/types'
 
-const SPECIES = [
+const SPECIES: { value: '' | import('@adoptame/types').PetSpecies; label: string; emoji: string }[] = [
   { value: '', label: 'Todos', emoji: '🐾' },
   { value: 'dog', label: 'Perros', emoji: '🐶' },
   { value: 'cat', label: 'Gatos', emoji: '🐱' },
