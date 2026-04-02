@@ -50,11 +50,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="p-4 border-b border-gray-100">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-bold text-sm">
-              {user.name[0].toUpperCase()}
+              {user?.name?.[0]?.toUpperCase() ?? "?"}
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate">{user.name}</p>
-              <p className="text-xs text-gray-400 truncate">{user.email}</p>
+              <p className="text-sm font-semibold text-gray-900 truncate">{user?.name}</p>
+              <p className="text-xs text-gray-400 truncate">{user?.email}</p>
             </div>
           </div>
         </div>
