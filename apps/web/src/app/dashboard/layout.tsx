@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/auth'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 const NAV = [
@@ -18,12 +18,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter()
   const { user, isAuthenticated } = useAuthStore()
 
+  const [hydrated, setHydrated] = useState(false)
+
   useEffect(() => {
+    setHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    if (!hydrated) return
     if (!isAuthenticated()) router.push('/login')
     else if (user?.role !== 'foundation') router.push('/')
-  }, [user, isAuthenticated])
+  }, [hydrated, user, isAuthenticated])
 
-  if (!user) return null
+  if (!hydrated || !user) return null
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
