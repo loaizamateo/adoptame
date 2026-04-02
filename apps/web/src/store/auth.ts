@@ -3,6 +3,8 @@ import { persist } from 'zustand/middleware'
 import type { User } from '@adoptame/types'
 
 interface AuthState {
+  _hasHydrated: boolean
+  setHasHydrated: (v: boolean) => void
   user: User | null
   accessToken: string | null
   refreshToken: string | null
@@ -17,11 +19,18 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       accessToken: null,
       refreshToken: null,
+      _hasHydrated: false,
+      setHasHydrated: (v) => set({ _hasHydrated: v }),
       setAuth: (user, tokens) =>
         set({ user, accessToken: tokens.accessToken, refreshToken: tokens.refreshToken }),
       logout: () => set({ user: null, accessToken: null, refreshToken: null }),
       isAuthenticated: () => !!get().accessToken,
     }),
-    { name: 'adoptame-auth' }
+    {
+      name: 'adoptame-auth',
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true)
+      },
+    }
   )
 )
