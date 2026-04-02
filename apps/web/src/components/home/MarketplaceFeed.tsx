@@ -58,7 +58,7 @@ export function MarketplaceFeed() {
     }
   }, [location.loading, location.city, location.country, species, fetchPets])
 
-  const handleSpecies = (val: string) => {
+  const handleSpecies = (val: PetSpecies | '') => {
     setSpecies(val)
   }
 
