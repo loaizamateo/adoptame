@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { EditPetForm } from '@/components/pets/EditPetForm'
-import { getPetById } from '@/lib/api/pets'
+import { getPetById } from '@/lib/pets'
 import type { Pet } from '@adoptame/types'
 
 interface Props { params: Promise<{ id: string }> }
