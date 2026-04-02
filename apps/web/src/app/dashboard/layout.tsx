@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/auth'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { cn } from '@/lib/utils'
 
 const NAV = [
@@ -16,21 +16,15 @@ const NAV = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
-  const { user, isAuthenticated } = useAuthStore()
-
-  const [hydrated, setHydrated] = useState(false)
+  const { user, isAuthenticated, _hasHydrated } = useAuthStore()
 
   useEffect(() => {
-    setHydrated(true)
-  }, [])
-
-  useEffect(() => {
-    if (!hydrated) return
+    if (!_hasHydrated) return
     if (!isAuthenticated()) router.push('/login')
     else if (user?.role !== 'foundation') router.push('/')
-  }, [hydrated, user, isAuthenticated])
+  }, [_hasHydrated, user, isAuthenticated])
 
-  if (!hydrated || !user) return null
+  if (!_hasHydrated || !user) return null
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
