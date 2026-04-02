@@ -1,5 +1,7 @@
-import Link from 'next/link'
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import Image from 'next/image'
+import { MarketplaceFeed } from '@/components/home/MarketplaceFeed'
 
 export const metadata: Metadata = {
   alternates: { canonical: 'https://adoptame.app' },
@@ -15,125 +17,80 @@ const organizationJsonLd = {
   sameAs: ['https://github.com/loaizamateo/adoptame'],
 }
 
-const websiteJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'Adoptame',
-  url: 'https://adoptame.app',
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: { '@type': 'EntryPoint', urlTemplate: 'https://adoptame.app/adoptar?search={search_term_string}' },
-    'query-input': 'required name=search_term_string',
-  },
-}
-
 export default function HomePage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
 
-      <main className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
-        {/* Hero */}
-        <section className="container mx-auto px-4 py-20 text-center">
-          <span className="text-6xl mb-6 block" aria-hidden="true">🐾</span>
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
-            Adopta una mascota en <span className="text-primary-600">Latinoamérica</span>
-          </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Conectamos perros, gatos y más mascotas que buscan hogar con familias amorosas.
-            Completamente gratuito para fundaciones y rescatistas.
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Link
-              href="/adoptar"
-              className="bg-primary-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-primary-700 transition text-lg"
-            >
-              Ver mascotas en adopción
-            </Link>
-            <Link
-              href="/fundaciones/nueva"
-              className="border border-primary-600 text-primary-600 px-8 py-3 rounded-full font-semibold hover:bg-primary-50 transition text-lg"
-            >
-              Registrar fundación
-            </Link>
-          </div>
-        </section>
+      <main className="min-h-screen bg-gray-50">
 
-        {/* Especies highlights */}
-        <section className="container mx-auto px-4 py-8" aria-label="Categorías de mascotas">
-          <div className="grid grid-cols-3 gap-4 max-w-lg mx-auto">
-            {[
-              { emoji: '🐶', label: 'Perros', href: '/adoptar?species=dog' },
-              { emoji: '🐱', label: 'Gatos', href: '/adoptar?species=cat' },
-              { emoji: '🐰', label: 'Otros', href: '/adoptar?species=other' },
-            ].map((item) => (
-              <Link key={item.label} href={item.href}>
-                <div className="bg-white border border-gray-100 rounded-2xl p-6 text-center hover:shadow-md hover:border-primary-200 transition group">
-                  <span className="text-4xl block mb-2 group-hover:scale-110 transition-transform">{item.emoji}</span>
-                  <p className="font-semibold text-gray-700">{item.label}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Stats */}
-        <section className="container mx-auto px-4 py-16" aria-label="Estadísticas">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            {[
-              { emoji: '🐶', label: 'Mascotas disponibles', value: '—' },
-              { emoji: '🏠', label: 'Fundaciones registradas', value: '—' },
-              { emoji: '❤️', label: 'Adopciones realizadas', value: '—' },
-            ].map((stat) => (
-              <div key={stat.label} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
-                <span className="text-4xl block mb-2" aria-hidden="true">{stat.emoji}</span>
-                <p className="text-3xl font-bold text-primary-600">{stat.value}</p>
-                <p className="text-gray-600 mt-1">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Cómo funciona */}
-        <section className="container mx-auto px-4 py-16">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-10">¿Cómo funciona?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {[
-              { step: '1', emoji: '🔍', title: 'Explora mascotas', desc: 'Busca por especie, ciudad, tamaño y más características.' },
-              { step: '2', emoji: '📋', title: 'Envía tu solicitud', desc: 'Cuéntale a la fundación sobre ti y tu hogar.' },
-              { step: '3', emoji: '🏠', title: '¡Bienvenido a casa!', desc: 'La fundación te contacta y coordina la entrega.' },
-            ].map((item) => (
-              <div key={item.step} className="text-center">
-                <div className="w-14 h-14 rounded-full bg-primary-100 text-primary-600 font-bold text-xl flex items-center justify-center mx-auto mb-3">
-                  {item.step}
-                </div>
-                <span className="text-3xl block mb-2">{item.emoji}</span>
-                <h3 className="font-semibold text-gray-900 mb-1">{item.title}</h3>
-                <p className="text-sm text-gray-500">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* CTA Open Source */}
-        <section className="bg-gradient-to-r from-primary-600 to-accent-500 text-white py-16">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold mb-4">100% Open Source & Gratuito</h2>
-            <p className="text-primary-100 mb-6 max-w-xl mx-auto">
-              Adoptame es open source. Fundaciones siempre gratis.
-              ¿Eres developer? Contribuye y ayuda a más mascotas a encontrar hogar.
+        {/* Hero compacto */}
+        <section className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white">
+          <div className="container mx-auto px-4 py-14 text-center">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 text-sm font-medium text-white/90 mb-5">
+              <span>🐾</span> Plataforma open source de adopción animal
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+              Encuentra a tu compañero<br />
+              <span className="text-accent-300">ideal para adoptar</span>
+            </h1>
+            <p className="text-primary-100 text-lg mb-8 max-w-xl mx-auto">
+              Conectamos mascotas que buscan hogar con familias amorosas en toda Latinoamérica.
             </p>
-            <a
-              href="https://github.com/loaizamateo/adoptame"
-              target="_blank"
-              rel="noopener noreferrer"
+            <div className="flex gap-3 justify-center flex-wrap">
+              <Link
+                href="/adoptar"
+                className="bg-accent-500 text-white px-7 py-3 rounded-full font-semibold hover:bg-accent-600 transition shadow-soft text-base"
+              >
+                Explorar mascotas
+              </Link>
+              <Link
+                href="/register?role=foundation"
+                className="bg-white/10 border border-white/30 text-white px-7 py-3 rounded-full font-semibold hover:bg-white/20 transition text-base"
+              >
+                Soy fundación →
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Marketplace con geolocalización */}
+        <MarketplaceFeed />
+
+        {/* Stats rápidos */}
+        <section className="bg-white border-t border-gray-100 py-10">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-3 gap-6 text-center max-w-lg mx-auto">
+              {[
+                { value: '100%', label: 'Gratis para fundaciones' },
+                { value: 'LATAM', label: 'Toda Latinoamérica' },
+                { value: 'Open', label: 'Código abierto' },
+              ].map((s) => (
+                <div key={s.label}>
+                  <div className="text-2xl font-bold text-primary-600">{s.value}</div>
+                  <div className="text-xs text-gray-500 mt-0.5">{s.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA fundaciones */}
+        <section className="bg-gradient-to-r from-primary-600 to-accent-500 text-white py-14">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-2xl font-bold mb-3">¿Tienes una fundación o rescatas animales?</h2>
+            <p className="text-primary-100 mb-6 max-w-xl mx-auto">
+              Publica tus mascotas gratis y conéctalas con familias que las están buscando.
+            </p>
+            <Link
+              href="/register"
               className="bg-white text-primary-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-50 transition inline-block"
             >
-              Ver en GitHub ⭐
-            </a>
+              Registrar fundación →
+            </Link>
           </div>
         </section>
+
       </main>
     </>
   )
