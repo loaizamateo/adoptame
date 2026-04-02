@@ -1,4 +1,5 @@
 import { FastifyInstance } from 'fastify'
+import { signPhotoUrls } from '../services/storage'
 import { createPetSchema, updatePetSchema } from '@adoptame/schemas'
 import { Pet } from '../models/Pet'
 import { Foundation } from '../models/Foundation'
@@ -35,9 +36,18 @@ export async function petRoutes(fastify: FastifyInstance) {
       Pet.countDocuments(filter),
     ])
 
+    // Firmar URLs de fotos para bucket privado
+    const signedData = await Promise.all(
+      data.map(async (pet) => {
+        const obj = pet.toObject()
+        if (obj.photos?.length) obj.photos = await signPhotoUrls(obj.photos)
+        return obj
+      })
+    )
+
     return reply.send({
       success: true,
-      data: { data, total, page, totalPages: Math.ceil(total / limit) },
+      data: { data: signedData, total, page, totalPages: Math.ceil(total / limit) },
     })
   })
 
@@ -46,7 +56,9 @@ export async function petRoutes(fastify: FastifyInstance) {
     const { id } = request.params as any
     const pet = await Pet.findById(id).populate('foundationId', 'name logo city country verified description instagram facebook website')
     if (!pet) return reply.status(404).send({ success: false, error: 'Mascota no encontrada' })
-    return reply.send({ success: true, data: pet })
+    const petObj = pet.toObject()
+    if (petObj.photos?.length) petObj.photos = await signPhotoUrls(petObj.photos)
+    return reply.send({ success: true, data: petObj })
   })
 
   // POST /pets — crear (solo fundación)

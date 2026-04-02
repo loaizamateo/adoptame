@@ -1,10 +1,9 @@
 import { FastifyInstance } from 'fastify'
-import { uploadFile } from '../services/storage'
+import { uploadFile, getSignedFileUrl } from '../services/storage'
 
 export async function uploadRoutes(fastify: FastifyInstance) {
   const authenticate = (fastify as any).authenticate
 
-  // POST /upload/image — subir imagen (requiere auth)
   fastify.post('/image', { onRequest: [authenticate] }, async (request, reply) => {
     const data = await (request as any).file()
     if (!data) {
@@ -22,8 +21,12 @@ export async function uploadRoutes(fastify: FastifyInstance) {
     }
 
     try {
-      const url = await uploadFile(buffer, data.mimetype, 'pets')
-      return reply.send({ success: true, data: { url } })
+      // Sube y obtiene el key
+      const key = await uploadFile(buffer, data.mimetype, 'pets')
+      // Genera pre-signed URL para uso inmediato en el frontend
+      const url = await getSignedFileUrl(key)
+      // Devuelve tanto el key (para guardar en DB) como la URL firmada (para preview)
+      return reply.send({ success: true, data: { key, url } })
     } catch (err: any) {
       return reply.status(500).send({ success: false, error: err.message })
     }
