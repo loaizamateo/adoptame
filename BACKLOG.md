@@ -4,7 +4,7 @@
 **Stack:** Next.js 15 (App Router) + Fastify + MongoDB Atlas + TailwindCSS + Turborepo  
 **Repo:** https://github.com/loaizamateo/adoptame  
 **Dominio:** adoptame.app  
-**Deploy:** https://adoptame-web.vercel.app (Vercel) · https://adoptameapi-production.up.railway.app (Railway)
+**Deploy:** https://adoptame.app (Vercel) · https://api.adoptame.app (Railway)
 
 ---
 
