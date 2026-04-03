@@ -1,11 +1,26 @@
 ---
 name: 💡 Feature Request
-about: Propone una nueva funcionalidad
+about: Proponé una nueva funcionalidad o mejora
 labels: enhancement
+assignees: ''
 ---
 
 ## ¿Qué problema resuelve?
+<!-- ¿A qué necesidad o pain point apunta esta feature? -->
+<!-- Ej: "Como fundación, me cuesta gestionar las solicitudes porque..." -->
 
-## Descripción de la solución
+## Solución propuesta
+<!-- ¿Cómo te imaginás que debería funcionar? -->
 
-## ¿Alternativas consideradas?
+## Alternativas consideradas
+<!-- ¿Pensaste en otras formas de resolverlo? ¿Por qué preferís esta? -->
+
+## ¿A quién afecta?
+<!-- Marcá los roles impactados -->
+- [ ] Adoptante
+- [ ] Fundación / Refugio
+- [ ] Admin
+- [ ] Todos
+
+## Contexto adicional / mockups
+<!-- Screenshots, wireframes, links de referencia, lo que tengas -->
