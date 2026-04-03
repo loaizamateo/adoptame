@@ -48,7 +48,7 @@ export default function PetsAdmin() {
                 {pets.map((p: any) => (
                   <tr key={p._id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">{p.name}</td>
-                    <td className="px-4 py-3 text-gray-500">{PET_LABELS.species[p.species]}</td>
+                    <td className="px-4 py-3 text-gray-500">{PET_LABELS.species[p.species as keyof typeof PET_LABELS.species] ?? p.species}</td>
                     <td className="px-4 py-3 text-gray-500 whitespace-nowrap">{p.city}</td>
                     <td className="px-4 py-3 text-gray-500 whitespace-nowrap">{p.foundationId?.name ?? '—'}</td>
                     <td className="px-4 py-3">

@@ -12,6 +12,7 @@ import { uploadRoutes } from './routes/upload'
 import { adminRoutes } from './routes/admin'
 import { adoptionRoutes } from './routes/adoptions'
 import { dashboardRoutes } from './routes/dashboard'
+import { fosterHomeRoutes } from './routes/fosterHomes'
 
 const fastify = Fastify({ logger: env.NODE_ENV === 'development' })
 
@@ -29,6 +30,7 @@ async function bootstrap() {
   fastify.register(adoptionRoutes,  { prefix: '/api/v1/adoptions' })
   fastify.register(dashboardRoutes, { prefix: '/api/v1/dashboard' })
   fastify.register(adminRoutes,    { prefix: '/api/v1/admin' })
+  fastify.register(fosterHomeRoutes, { prefix: '/api/v1/foster-homes' })
 
   fastify.get('/health', async () => ({ status: 'ok', timestamp: new Date().toISOString() }))
 
