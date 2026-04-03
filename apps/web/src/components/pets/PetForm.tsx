@@ -18,7 +18,21 @@ interface Props {
 export default function PetForm({ pet }: Props) {
   const router = useRouter()
   const [serverError, setServerError] = useState('')
-  const [photos, setPhotos] = useState<string[]>(pet?.photos ?? [])
+  // photoKeys: lo que se guarda en DB (keys de B2 o URL firmada existente)
+  // photoDisplayUrls: lo que se muestra en el preview (blob URL o URL firmada)
+  const [photoKeys, setPhotoKeys] = useState<string[]>(() => {
+    if (!pet?.photos) return []
+    // Extraer el key de las URLs firmadas: .../pets/uuid.png?X-Amz-... → pets/uuid.png
+    return pet.photos.map((url: string) => {
+      try {
+        const path = new URL(url).pathname.replace(/^\//, '')
+        return path.includes('pets/') ? path : url
+      } catch {
+        return url
+      }
+    })
+  })
+  const [photoDisplayUrls, setPhotoDisplayUrls] = useState<string[]>(pet?.photos ?? [])
   const [uploading, setUploading] = useState(false)
 
   const {
@@ -52,30 +66,41 @@ export default function PetForm({ pet }: Props) {
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
-    if (photos.length + files.length > 8) {
+    if (photoKeys.length + files.length > 8) {
       alert('Máximo 8 fotos')
       return
     }
     setUploading(true)
     try {
-      const urls = await Promise.all(files.map(uploadPetPhoto))
-      setPhotos((prev) => [...prev, ...urls])
+      for (const file of files) {
+        // Preview inmediato con blob URL
+        const blobUrl = URL.createObjectURL(file)
+        setPhotoDisplayUrls((prev) => [...prev, blobUrl])
+        // Upload y guardar key
+        const key = await uploadPetPhoto(file)
+        setPhotoKeys((prev) => [...prev, key])
+      }
     } catch {
       alert('Error al subir fotos')
+      // Revertir previews si falla
+      setPhotoDisplayUrls((prev) => prev.slice(0, photoKeys.length))
     } finally {
       setUploading(false)
     }
   }
 
-  const removePhoto = (idx: number) => setPhotos((prev) => prev.filter((_, i) => i !== idx))
+  const removePhoto = (idx: number) => {
+    setPhotoKeys((prev) => prev.filter((_, i) => i !== idx))
+    setPhotoDisplayUrls((prev) => prev.filter((_, i) => i !== idx))
+  }
 
   const onSubmit = async (data: CreatePetInput) => {
     setServerError('')
     try {
       if (pet) {
-        await updatePet(pet._id, { ...data, photos })
+        await updatePet(pet._id, { ...data, photos: photoKeys })
       } else {
-        await createPet({ ...data, photos })
+        await createPet({ ...data, photos: photoKeys })
       }
       router.push('/dashboard/mascotas')
     } catch (err: any) {
@@ -92,7 +117,7 @@ export default function PetForm({ pet }: Props) {
             Fotos <span className="text-gray-400 font-normal">(máx. 8)</span>
           </label>
           <div className="flex flex-wrap gap-2">
-            {photos.map((url, i) => (
+            {photoDisplayUrls.map((url, i) => (
               <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden group">
                 <img src={url} alt="" className="w-full h-full object-cover" />
                 <button
@@ -104,7 +129,7 @@ export default function PetForm({ pet }: Props) {
                 </button>
               </div>
             ))}
-            {photos.length < 8 && (
+            {photoKeys.length < 8 && (
               <label className="w-20 h-20 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400 cursor-pointer hover:border-primary-400 transition">
                 {uploading ? '...' : '+'}
                 <input type="file" accept="image/*" multiple className="sr-only" onChange={handlePhotoUpload} />
