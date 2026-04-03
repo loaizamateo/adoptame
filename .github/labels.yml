@@ -1,0 +1,39 @@
+- name: bug
+  color: d73a4a
+  description: Algo no funciona como debería
+- name: enhancement
+  color: a2eeef
+  description: Nueva funcionalidad o mejora
+- name: question
+  color: d876e3
+  description: Preguntas sobre el proyecto
+- name: documentation
+  color: 0075ca
+  description: Mejoras o adiciones a la documentación
+- name: good first issue
+  color: 7057ff
+  description: Buen punto de entrada para nuevos contribuidores
+- name: help wanted
+  color: 008672
+  description: Se necesita ayuda extra
+- name: wontfix
+  color: ffffff
+  description: No se va a trabajar en esto
+- name: duplicate
+  color: cfd3d7
+  description: Issue o PR ya existente
+- name: invalid
+  color: e4e669
+  description: No parece correcto
+- name: testing
+  color: f9d0c4
+  description: Relacionado con tests
+- name: design
+  color: f4a261
+  description: Cambios de UI/UX
+- name: backend
+  color: 0e8a16
+  description: Cambios en la API
+- name: frontend
+  color: 1d76db
+  description: Cambios en el frontend
