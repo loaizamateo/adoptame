@@ -43,6 +43,7 @@ export async function adoptionRoutes(fastify: FastifyInstance) {
     })
 
     // Notificar a la fundación
+    const foundation = await Foundation.findById(pet.foundationId)
     try {
       const [foundationOwner, adopterUser] = await Promise.all([
         (await import('../models/User')).User.findById(foundation.ownerId).select('name email'),
