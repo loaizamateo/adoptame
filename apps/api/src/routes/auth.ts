@@ -1,3 +1,4 @@
+import { sendEmail, emailTemplates } from '../services/email'
 import { FastifyInstance } from 'fastify'
 import {
   loginSchema,
@@ -152,8 +153,9 @@ export async function authRoutes(fastify: FastifyInstance) {
       user.resetPasswordToken = token
       user.resetPasswordExpires = new Date(Date.now() + 3600000) // 1 hora
       await user.save()
-      // TODO: enviar email con Resend cuando esté configurado
-      // await sendResetPasswordEmail(user.email, token)
+      const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`
+      const tpl = emailTemplates.resetPassword(user.name, resetUrl)
+      sendEmail({ to: user.email, ...tpl }).catch(console.error)
     }
 
     return reply.send({
