@@ -1,3 +1,4 @@
+import { sendEmail, emailTemplates } from '../services/email'
 import { FastifyInstance } from 'fastify'
 import { createAdoptionRequestSchema } from '@adoptame/schemas'
 import { AdoptionRequest } from '../models/AdoptionRequest'
@@ -40,6 +41,23 @@ export async function adoptionRoutes(fastify: FastifyInstance) {
       userId: user.userId,
       foundationId: pet.foundationId,
     })
+
+    // Notificar a la fundación
+    try {
+      const [foundationOwner, adopterUser] = await Promise.all([
+        (await import('../models/User')).User.findById(foundation.ownerId).select('name email'),
+        (await import('../models/User')).User.findById(user.userId).select('name'),
+      ])
+      if (foundationOwner?.email) {
+        const tpl = emailTemplates.adoptionRequestReceived(
+          foundation.name,
+          pet.name,
+          adopterUser?.name ?? 'Un adoptante',
+          `${process.env.FRONTEND_URL}/dashboard/solicitudes`
+        )
+        await sendEmail({ to: foundationOwner.email, ...tpl })
+      }
+    } catch (e) { console.error('[email] adoption notify:', e) }
 
     return reply.status(201).send({ success: true, data: adoption })
   })
@@ -122,6 +140,17 @@ export async function adoptionRoutes(fastify: FastifyInstance) {
     adoption.status = status as any
     if (notes) adoption.notes = notes
     await adoption.save()
+
+    // Notificar al adoptante
+    try {
+      const { User } = await import('../models/User')
+      const adopter = await User.findById(adoption.userId).select('name email')
+      if (adopter?.email) {
+        const petDoc = await Pet.findById(adoption.petId).select('name')
+        const tpl = emailTemplates.adoptionStatusChanged(adopter.name, petDoc?.name ?? 'tu mascota', status, notes)
+        await sendEmail({ to: adopter.email, ...tpl })
+      }
+    } catch (e) { console.error('[email] status notify:', e) }
 
     // Si se aprueba, poner la mascota en "en proceso"
     if (status === 'approved') {
