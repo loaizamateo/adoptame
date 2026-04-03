@@ -44,6 +44,7 @@ export async function adoptionRoutes(fastify: FastifyInstance) {
 
     // Notificar a la fundación
     const foundation = await Foundation.findById(pet.foundationId)
+    if (!foundation) return reply.status(404).send({ success: false, error: 'Fundación no encontrada' })
     try {
       const [foundationOwner, adopterUser] = await Promise.all([
         (await import('../models/User')).User.findById(foundation.ownerId).select('name email'),
