@@ -20,9 +20,9 @@
 | E-06 | Solicitudes de Adopción | ✅ Completa |
 | E-07 | Panel de Fundación (Dashboard) | ✅ Completa |
 | E-08 | Hogares de Paso & Voluntariado | ⬜ Pendiente |
-| E-09 | Notificaciones & Email | ⬜ Pendiente |
+| E-09 | Notificaciones & Email | ✅ Completa |
 | E-10 | SEO & Performance | ✅ Completa |
-| E-11 | Admin Global | ⬜ Pendiente |
+| E-11 | Admin Global | ✅ Completa |
 | E-12 | Open Source — Comunidad & Docs | ⬜ Pendiente |
 | E-13 | Design System & Branding | ✅ Completa |
 | E-14 | Deploy & DevOps | ✅ Completa |
@@ -42,7 +42,7 @@
 | B-06 | ~~Tabla de mascotas sin scroll horizontal en mobile~~ | ✅ Resuelto |
 | B-07 | ~~Axios no renovaba el access token al expirar (15 min)~~ | ✅ Resuelto |
 | B-08 | Las fotos subidas expiran en 1h — considerar hacer el bucket público | Media |
-| B-09 | El dashboard muestra mascotas de todas las fundaciones si el user no tiene `foundationId` | Alta |
+| B-09 | ~~El dashboard muestra mascotas de todas las fundaciones si el user no tiene `foundationId`~~ | ✅ Resuelto |
 
 ---
 
@@ -142,11 +142,16 @@
 
 ---
 
-## E-09 — Notificaciones & Email ⬜
+## E-09 — Notificaciones & Email ✅
 
-- [ ] Templates Resend: bienvenida, nueva solicitud, resultado solicitud
-- [ ] Notificaciones in-app (badge + listado)
-- [ ] Preferencias de notificación
+- [x] Email service con Resend (fallback silencioso si no hay key)
+- [x] Templates HTML con branding de Adoptame
+- [x] Email a fundación al recibir nueva solicitud de adopción
+- [x] Email a adoptante cuando cambia el estado de su solicitud
+- [x] Reset password envía email real (PR #53)
+- [x] Email de verificación a fundación cuando el admin la verifica
+- [ ] Notificaciones in-app (badge + listado) — futuro
+- [ ] Preferencias de notificación — futuro
 
 ---
 
@@ -160,12 +165,13 @@
 
 ---
 
-## E-11 — Admin Global ⬜
+## E-11 — Admin Global ✅
 
-- [ ] Panel `/admin` — solo rol Admin
-- [ ] Aprobar/rechazar fundaciones
-- [ ] Gestión de usuarios
-- [ ] Métricas globales (mascotas publicadas, adopciones, fundaciones)
+- [x] Panel `/admin` con layout responsive (hamburguesa en mobile)
+- [x] Estadísticas globales: fundaciones, verificadas, pendientes, mascotas, usuarios, adopciones
+- [x] `/admin/fundaciones` — verificar/revocar con un click + email automático
+- [x] `/admin/usuarios` — listado, suspender/activar
+- [x] `/admin/mascotas` — vista global con filtro por estado
 
 ---
 
@@ -230,4 +236,4 @@
 
 ---
 
-_Última actualización: 2026-04-03_
+_Última actualización: 2026-04-03 (PR #52 /pets/mine, PR #53 admin + emails)_
