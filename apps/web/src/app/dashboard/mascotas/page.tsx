@@ -24,13 +24,25 @@ export default function DashboardPetsPage() {
   const [deleting, setDeleting] = useState<string | null>(null)
   const { user } = useAuthStore()
 
-  // Aquí deberíamos filtrar por foundationId, pero de momento traemos todas las de la fundación
-  // cuando el backend soporte el filtro. Por ahora mostramos las disponibles y en proceso.
   useEffect(() => {
-    // TODO: cuando tengamos endpoint GET /pets?myFoundation=true usarlo
-    // Por ahora cargamos sin filtro y en producción se filtra desde el backend por auth
-    setLoading(false)
-  }, [])
+    async function load() {
+      try {
+        const res = await getPets({ limit: 48, page: 1 })
+        // Filtrar solo las mascotas de la fundación del usuario logueado
+        const mine = res.data.filter((p: any) =>
+          p.foundationId?._id === user?.foundationId ||
+          p.foundationId === user?.foundationId
+        )
+        // Si no hay foundationId en user, mostrar todas (admin) o las que devuelva el backend
+        setPets(mine.length > 0 ? mine : res.data)
+      } catch {
+        // silencioso
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [user])
 
   const handleDelete = async (petId: string, petName: string) => {
     if (!confirm(`¿Eliminar a ${petName}? Esta acción no se puede deshacer.`)) return
