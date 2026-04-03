@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'media.adoptame.app' },
       { protocol: 'https', hostname: '*.r2.cloudflarestorage.com' },
       { protocol: 'https', hostname: '*.cloudflare.com' },
+      { protocol: 'https', hostname: '*.backblazeb2.com' },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
     ],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200],
