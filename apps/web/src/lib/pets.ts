@@ -31,5 +31,6 @@ export async function uploadPetPhoto(file: File): Promise<string> {
   const res = await api.post('/upload/image', form, {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
-  return res.data.data.url as string
+  // Guardar el key (no la URL firmada que expira) — la API firma al consultar
+  return (res.data.data.key || res.data.data.url) as string
 }
