@@ -24,6 +24,8 @@ export const createPetSchema = z.object({
   urgent: z.boolean().default(false),
   city: z.string().min(1, 'La ciudad es requerida'),
   country: z.string().min(1, 'El país es requerido'),
+  photos: z.array(z.string()).optional(),
+  status: PetStatus.optional(),
 })
 
 export const updatePetSchema = createPetSchema.partial()
