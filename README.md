@@ -24,16 +24,18 @@ Es **completamente gratuito** para fundaciones y rescatistas, y open source para
 - 🔍 Búsqueda con filtros (especie, tamaño, edad, ciudad, compatibilidad)
 - 🏠 Panel de gestión para fundaciones y refugios
 - 📋 Flujo completo de solicitud de adopción
-- ❤️ Sistema de donaciones directas a fundaciones
-- 📧 Notificaciones por email
-- 🌎 Enfocado en LATAM (español, ciudades locales)
+- 🏡 Hogares de paso — registrate para acoger temporalmente mascotas rescatadas
+- 🛡️ Verificación de fundaciones por administrador
+- 👑 Panel de administración global (stats, fundaciones, usuarios, mascotas)
+- 📧 Notificaciones automáticas por email (solicitudes, estados, verificaciones)
+- 🌎 Geolocalización automática — mascotas de tu ciudad primero
 - 📊 SEO optimizado — cada mascota indexada en Google
 
 ## 🛠️ Stack
 
 | Capa | Tecnología |
 |------|-----------|
-| Frontend | Next.js 14 (App Router) + TailwindCSS |
+| Frontend | Next.js 15 (App Router) + TailwindCSS |
 | Backend | Fastify + TypeScript |
 | Base de datos | MongoDB Atlas |
 | Monorepo | Turborepo |
@@ -43,7 +45,7 @@ Es **completamente gratuito** para fundaciones y rescatistas, y open source para
 ## 🚀 Inicio rápido
 
 ### Requisitos
-- Node.js >= 20
+- Node.js >= 22.13.0
 - npm >= 10
 - Una cuenta en [MongoDB Atlas](https://mongodb.com/atlas) (tier gratuito)
 
