@@ -1,13 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getPets } from '@/lib/pets'
-import { deletePet, updatePet } from '@/lib/pets'
+import { getMyPets, deletePet, updatePet } from '@/lib/pets'
 import type { Pet } from '@adoptame/types'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { PET_LABELS } from '@/lib/utils'
-import { useAuthStore } from '@/store/auth'
 
 const STATUS_COLORS: Record<string, string> = {
   available:  'bg-green-50 text-green-700 border-green-200',
@@ -22,19 +20,11 @@ export default function DashboardPetsPage() {
   const [pets, setPets] = useState<Pet[]>([])
   const [loading, setLoading] = useState(true)
   const [deleting, setDeleting] = useState<string | null>(null)
-  const { user } = useAuthStore()
-
   useEffect(() => {
     async function load() {
       try {
-        const res = await getPets({ limit: 48, page: 1 })
-        // Filtrar solo las mascotas de la fundación del usuario logueado
-        const mine = res.data.filter((p: any) =>
-          p.foundationId?._id === user?.foundationId ||
-          p.foundationId === user?.foundationId
-        )
-        // Si no hay foundationId en user, mostrar todas (admin) o las que devuelva el backend
-        setPets(mine.length > 0 ? mine : res.data)
+        const res = await getMyPets()
+        setPets(res.data)
       } catch {
         // silencioso
       } finally {
@@ -42,7 +32,7 @@ export default function DashboardPetsPage() {
       }
     }
     load()
-  }, [user])
+  }, [])
 
   const handleDelete = async (petId: string, petName: string) => {
     if (!confirm(`¿Eliminar a ${petName}? Esta acción no se puede deshacer.`)) return

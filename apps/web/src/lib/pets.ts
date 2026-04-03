@@ -11,6 +11,11 @@ export async function getPetById(id: string) {
   return res.data.data as Pet
 }
 
+export async function getMyPets(params?: { status?: string; page?: number; limit?: number }) {
+  const res = await api.get('/pets/mine', { params })
+  return res.data.data as { data: Pet[]; total: number; page: number; totalPages: number }
+}
+
 export async function createPet(data: any) {
   const res = await api.post('/pets', data)
   return res.data.data as Pet
