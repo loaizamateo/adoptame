@@ -88,6 +88,7 @@ export default function DashboardPetsPage() {
         </div>
       ) : (
         <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 text-xs text-gray-400 uppercase tracking-wide">
@@ -158,6 +159,7 @@ export default function DashboardPetsPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>
