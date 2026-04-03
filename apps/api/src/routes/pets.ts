@@ -61,6 +61,43 @@ export async function petRoutes(fastify: FastifyInstance) {
     return reply.send({ success: true, data: petObj })
   })
 
+  // GET /pets/mine — mascotas de la fundación autenticada
+  fastify.get('/mine', { onRequest: [authenticate] }, async (request, reply) => {
+    const user = (request as any).user
+    const foundation = await Foundation.findOne({ ownerId: user.userId })
+    if (!foundation) {
+      return reply.status(404).send({ success: false, error: 'Fundación no encontrada' })
+    }
+
+    const query = request.query as any
+    const filter: Record<string, any> = { foundationId: foundation._id }
+    if (query.status) filter.status = query.status
+    const page = parseInt(query.page) || 1
+    const limit = Math.min(parseInt(query.limit) || 24, 48)
+    const skip = (page - 1) * limit
+
+    const [data, total] = await Promise.all([
+      Pet.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      Pet.countDocuments(filter),
+    ])
+
+    const signedData = await Promise.all(
+      data.map(async (pet) => {
+        const obj = pet.toObject()
+        if (obj.photos?.length) obj.photos = await signPhotoUrls(obj.photos)
+        return obj
+      })
+    )
+
+    return reply.send({
+      success: true,
+      data: { data: signedData, total, page, totalPages: Math.ceil(total / limit) },
+    })
+  })
+
   // POST /pets — crear (solo fundación)
   fastify.post('/', { onRequest: [authenticate] }, async (request, reply) => {
     const user = (request as any).user
