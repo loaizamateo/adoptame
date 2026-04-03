@@ -12,6 +12,7 @@ const NAV = [
   { href: '/dashboard/mascotas',    label: 'Mis mascotas',  emoji: '🐾' },
   { href: '/dashboard/solicitudes', label: 'Solicitudes',   emoji: '📋' },
   { href: '/dashboard/perfil',      label: 'Perfil',        emoji: '⚙️' },
+  { href: '/hogares',                label: 'Hogares de paso', emoji: '🏠' },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

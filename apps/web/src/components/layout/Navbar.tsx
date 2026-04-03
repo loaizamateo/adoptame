@@ -26,6 +26,7 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
           <Link href="/adoptar" className="hover:text-primary-600 transition font-medium">Adoptar</Link>
           <Link href="/fundaciones" className="hover:text-primary-600 transition font-medium">Fundaciones</Link>
+          <Link href="/hogares" className="hover:text-primary-600 transition font-medium">Hogares de paso</Link>
           <Link href="https://github.com/loaizamateo/adoptame" target="_blank" className="hover:text-primary-600 transition font-medium">
             Open Source ⭐
           </Link>
