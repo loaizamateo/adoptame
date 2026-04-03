@@ -26,6 +26,7 @@ Es **completamente gratuito** para fundaciones y rescatistas, y open source para
 - 📋 Flujo completo de solicitud de adopción
 - 🏡 Hogares de paso — registrate para acoger temporalmente mascotas rescatadas
 - 🛡️ Verificación de fundaciones por administrador
+- ❤️ Donaciones directas a fundaciones (Nequi, Daviplata, PayPal, MercadoPago)
 - 👑 Panel de administración global (stats, fundaciones, usuarios, mascotas)
 - 📧 Notificaciones automáticas por email (solicitudes, estados, verificaciones)
 - 🌎 Geolocalización automática — mascotas de tu ciudad primero

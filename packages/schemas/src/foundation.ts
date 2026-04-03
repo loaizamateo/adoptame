@@ -11,11 +11,6 @@ export const createFoundationSchema = z.object({
   facebook: z.string().optional(),
 })
 
-export const updateFoundationSchema = createFoundationSchema.partial()
-
-export type CreateFoundationInput = z.infer<typeof createFoundationSchema>
-export type UpdateFoundationInput = z.infer<typeof updateFoundationSchema>
-
 export const donationLinksSchema = z.object({
   nequi: z.string().optional(),
   daviplata: z.string().optional(),
@@ -25,8 +20,14 @@ export const donationLinksSchema = z.object({
   other: z.string().optional(),
 })
 
+export const updateFoundationSchema = createFoundationSchema.partial().extend({
+  donationLinks: donationLinksSchema.optional(),
+})
+
 export const updateFoundationDonationsSchema = z.object({
   donationLinks: donationLinksSchema,
 })
 
+export type CreateFoundationInput = z.infer<typeof createFoundationSchema>
+export type UpdateFoundationInput = z.infer<typeof updateFoundationSchema>
 export type UpdateFoundationDonationsInput = z.infer<typeof updateFoundationDonationsSchema>
