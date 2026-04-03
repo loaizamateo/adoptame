@@ -37,7 +37,7 @@ Es **completamente gratuito** para fundaciones y rescatistas, y open source para
 | Backend | Fastify + TypeScript |
 | Base de datos | MongoDB Atlas |
 | Monorepo | Turborepo |
-| Storage | Cloudflare R2 |
+| Storage | Backblaze B2 |
 | Deploy | Vercel + Railway |
 
 ## 🚀 Inicio rápido
