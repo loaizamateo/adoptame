@@ -13,6 +13,7 @@ export const createFoundationSchema = z.object({
   website: z.string().url().optional().or(z.literal('')),
   instagram: z.string().optional(),
   facebook: z.string().optional(),
+  logo: z.string().optional(),
 })
 
 export const donationLinksSchema = z.object({
