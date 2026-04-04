@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { getPetById } from '@/lib/pets'
+import { trackPetViewed } from '@/lib/analytics'
 import type { Pet } from '@adoptame/types'
 import { PET_LABELS } from '@/lib/utils'
 import { PetJsonLd } from './PetJsonLd'
@@ -20,7 +21,7 @@ export default function PetDetail({ id }: Props) {
 
   useEffect(() => {
     getPetById(id)
-      .then(setPet)
+      .then(p => { setPet(p); if (p) trackPetViewed(p._id, p.name, p.species, p.city) })
       .catch(() => setPet(null))
       .finally(() => setLoading(false))
   }, [id])

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { getFoundationBySlug } from '@/lib/foundations'
+import { trackFoundationViewed } from '@/lib/analytics'
 import type { Foundation, Pet } from '@adoptame/types'
 import { DonationSection } from './DonationSection'
 import Link from 'next/link'
@@ -15,7 +16,7 @@ export default function FoundationProfile({ slug }: Props) {
 
   useEffect(() => {
     getFoundationBySlug(slug)
-      .then(setData)
+      .then(d => { setData(d); if (d) trackFoundationViewed(slug, d.foundation.name, d.foundation.city) })
       .catch(() => setData(null))
       .finally(() => setLoading(false))
   }, [slug])

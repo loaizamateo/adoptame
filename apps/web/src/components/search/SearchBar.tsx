@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { api } from '@/lib/api'
+import { trackSearch } from '@/lib/analytics'
 
 interface PetResult {
   _id: string
@@ -46,6 +47,7 @@ export function SearchBar() {
       const res = await api.get('/search', { params: { q } })
       setResults(res.data)
       setOpen(true)
+      trackSearch(q, res.data.pets?.length ?? 0, res.data.foundations?.length ?? 0)
     } catch {
       setResults(null)
     } finally {
