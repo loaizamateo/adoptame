@@ -21,7 +21,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # turbo.json defines test as depending on ^build, so shared packages
-      # (schemas, types) are built automatically before tests run.
-      - name: Test
-        run: npm run test
+      # Shared packages must be built before tests can import from them
+      - name: Build shared packages
+        run: |
+          npm run build --workspace=packages/schemas
+          npm run build --workspace=packages/types
+
+      - name: Test — schemas (55 tests)
+        run: npm run test --workspace=packages/schemas
+
+      - name: Test — api (55 tests)
+        run: npm run test --workspace=apps/api
+
+      - name: Test — web (22 tests)
+        run: npm run test --workspace=apps/web
