@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createFosterHome } from '@/lib/fosterHomes'
 import { Button } from '@/components/ui/Button'
+import { CitySelect } from '@/components/ui/CitySelect'
 import { useAuthStore } from '@/store/auth'
 
 const SPECIES = [
@@ -26,7 +27,7 @@ export function RegisterFosterHomeForm() {
     name: '',
     bio: '',
     city: '',
-    country: 'Colombia',
+    country: '',
     phone: '',
     acceptedSpecies: ['dog', 'cat'] as string[],
     acceptedSizes: ['small', 'medium', 'large'] as string[],
@@ -46,6 +47,7 @@ export function RegisterFosterHomeForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!isAuthenticated()) { router.push('/login'); return }
+    if (!form.city || !form.country) { setError('Seleccioná un país y ciudad válidos'); return }
     if (form.acceptedSpecies.length === 0) { setError('Seleccioná al menos una especie'); return }
     if (form.acceptedSizes.length === 0) { setError('Seleccioná al menos un tamaño'); return }
 
@@ -87,27 +89,13 @@ export function RegisterFosterHomeForm() {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Ciudad *</label>
-          <input
-            required
-            value={form.city}
-            onChange={e => setForm(f => ({ ...f, city: e.target.value }))}
-            placeholder="Bogotá"
-            className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">País *</label>
-          <input
-            required
-            value={form.country}
-            onChange={e => setForm(f => ({ ...f, country: e.target.value }))}
-            className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300"
-          />
-        </div>
-      </div>
+      <CitySelect
+        value={form.city}
+        country={form.country}
+        onCityChange={city => setForm(f => ({ ...f, city }))}
+        onCountryChange={country => setForm(f => ({ ...f, country, city: '' }))}
+        required
+      />
 
       <div className="grid grid-cols-2 gap-4">
         <div>

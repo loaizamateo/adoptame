@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { DonationLinksForm } from '@/components/dashboard/DonationLinksForm'
+import { CitySelect } from '@/components/ui/CitySelect'
 import { updateFoundation } from '@/lib/foundations'
 import { api } from '@/lib/api'
 import type { Foundation } from '@adoptame/types'
@@ -17,6 +18,8 @@ export default function DashboardProfilePage() {
   const [loading, setLoading] = useState(true)
   const [saved, setSaved] = useState(false)
   const [serverError, setServerError] = useState('')
+  const [profileCity, setProfileCity] = useState('')
+  const [profileCountry, setProfileCountry] = useState('')
 
   const {
     register,
@@ -29,7 +32,11 @@ export default function DashboardProfilePage() {
     api.get('/auth/me').then((res) => {
       const f = res.data.data.foundation
       setFoundation(f)
-      if (f) reset(f)
+      if (f) {
+        reset(f)
+        setProfileCity(f.city || '')
+        setProfileCountry(f.country || '')
+      }
     }).finally(() => setLoading(false))
   }, [reset])
 
@@ -38,7 +45,7 @@ export default function DashboardProfilePage() {
     setServerError('')
     setSaved(false)
     try {
-      const updated = await updateFoundation(foundation._id, data)
+      const updated = await updateFoundation(foundation._id, { ...data, city: profileCity, country: profileCountry })
       setFoundation((prev) => ({ ...updated, donationLinks: prev?.donationLinks }))
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
@@ -72,10 +79,14 @@ export default function DashboardProfilePage() {
             />
             {errors.description && <p className="text-xs text-red-500 mt-1">{errors.description.message}</p>}
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <Input label="Ciudad *" error={errors.city?.message} {...register('city')} />
-            <Input label="País *" error={errors.country?.message} {...register('country')} />
-          </div>
+          <CitySelect
+            value={profileCity}
+            country={profileCountry}
+            onCityChange={setProfileCity}
+            onCountryChange={(c) => { setProfileCountry(c); setProfileCity('') }}
+            error={errors.city?.message || errors.country?.message}
+            required
+          />
           <Input label="Teléfono / WhatsApp" {...register('phone')} />
           <Input label="Sitio web" type="url" placeholder="https://" {...register('website')} />
           <div className="grid grid-cols-2 gap-4">

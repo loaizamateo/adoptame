@@ -1,4 +1,8 @@
 import { z } from 'zod'
+import { LOCATIONS } from './locations'
+
+const validCities = LOCATIONS.map(l => l.city)
+const validCountries = [...new Set(LOCATIONS.map(l => l.country))]
 
 export const PetSpecies = z.enum(['dog', 'cat', 'other'])
 export const PetSize = z.enum(['small', 'medium', 'large'])
@@ -22,8 +26,8 @@ export const createPetSchema = z.object({
   sterilized: z.boolean().default(false),
   dewormed: z.boolean().default(false),
   urgent: z.boolean().default(false),
-  city: z.string().min(1, 'La ciudad es requerida'),
-  country: z.string().min(1, 'El país es requerido'),
+  city: z.string().refine(v => validCities.includes(v), { message: 'Ciudad no válida' }),
+  country: z.string().refine(v => validCountries.includes(v), { message: 'País no válido' }),
   photos: z.array(z.string()).optional(),
   status: PetStatus.optional(),
 })
