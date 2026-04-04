@@ -22,6 +22,7 @@ Es **completamente gratuito** para fundaciones y rescatistas, y open source para
 ## ✨ Features
 
 - 🔍 Búsqueda con filtros (especie, tamaño, edad, ciudad, compatibilidad)
+- 💛 Mascotas favoritas — guarda las que más te gusten (sin necesidad de cuenta)
 - 🏠 Panel de gestión para fundaciones y refugios
 - 📋 Flujo completo de solicitud de adopción
 - 🏡 Hogares de paso — registrate para acoger temporalmente mascotas rescatadas
@@ -81,8 +82,18 @@ La app estará en:
 ### Con Docker
 
 ```bash
-docker-compose up -d
-npm run seed --workspace=apps/api
+# Copiar variables de entorno
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env
+
+# Editar apps/api/.env con tus JWT secrets y credenciales externas
+# (Backblaze B2, Resend — ver apps/api/.env.example para referencia)
+
+# Construir y levantar todos los servicios
+docker compose up --build -d
+
+# Poblar la base de datos con datos de prueba (dentro del contenedor)
+docker compose exec api npm run seed
 ```
 
 ### 🌱 Credenciales de prueba (después del seed)
