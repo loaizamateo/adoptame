@@ -8,7 +8,9 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { createAdoptionRequest } from '@/lib/adoptions'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { trackAdoptionRequest } from '@/lib/analytics'
+import { useState, useEffect } from 'react'
+import { getPetById } from '@/lib/pets'
 
 interface Props { petId: string }
 
@@ -16,6 +18,11 @@ export default function AdoptionRequestForm({ petId }: Props) {
   const router = useRouter()
   const [serverError, setServerError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [petMeta, setPetMeta] = useState<{ name: string; species: string } | null>(null)
+
+  useEffect(() => {
+    getPetById(petId).then(p => setPetMeta({ name: p.name, species: p.species })).catch(() => {})
+  }, [petId])
 
   const {
     register,
@@ -30,6 +37,7 @@ export default function AdoptionRequestForm({ petId }: Props) {
     setServerError('')
     try {
       await createAdoptionRequest(data)
+      trackAdoptionRequest(petId, petMeta?.name ?? '', petMeta?.species ?? '')
       setSuccess(true)
     } catch (err: any) {
       setServerError(err.response?.data?.error || 'Error al enviar la solicitud')
