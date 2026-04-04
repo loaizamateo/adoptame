@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { Pet } from '../models/Pet'
 import { Foundation } from '../models/Foundation'
+import { signPhotoUrls } from '../services/storage'
 
 export async function searchRoutes(fastify: FastifyInstance) {
   fastify.get('/', async (request, reply) => {
@@ -12,7 +13,7 @@ export async function searchRoutes(fastify: FastifyInstance) {
 
     const regex = new RegExp(q.trim(), 'i')
 
-    const [pets, foundations] = await Promise.all([
+    const [rawPets, foundations] = await Promise.all([
       Pet.find({
         status: 'available',
         $or: [
@@ -37,6 +38,14 @@ export async function searchRoutes(fastify: FastifyInstance) {
         .limit(5)
         .lean(),
     ])
+
+    // Firmar URLs de fotos de mascotas
+    const pets = await Promise.all(
+      rawPets.map(async (pet: any) => {
+        if (pet.photos?.length) pet.photos = await signPhotoUrls(pet.photos)
+        return pet
+      })
+    )
 
     return { pets, foundations }
   })
