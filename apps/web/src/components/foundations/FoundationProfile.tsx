@@ -5,6 +5,7 @@ import { getFoundationBySlug } from '@/lib/foundations'
 import { trackFoundationViewed } from '@/lib/analytics'
 import type { Foundation, Pet } from '@adoptame/types'
 import { DonationSection } from './DonationSection'
+import { PetCard } from '@/components/pets/PetCard'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -109,27 +110,8 @@ export default function FoundationProfile({ slug }: Props) {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {pets.map((pet: any) => (
-              <Link key={pet._id} href={`/mascotas/${pet._id}`}>
-                <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-md transition group">
-                  <div className="aspect-square bg-gray-50 relative">
-                    {pet.photos?.[0] ? (
-                      <Image src={pet.photos[0]} alt={pet.name} fill className="object-cover" sizes="(max-width: 768px) 50vw, 33vw" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-5xl">
-                        {pet.species === 'dog' ? '🐶' : pet.species === 'cat' ? '🐱' : '🐾'}
-                      </div>
-                    )}
-                    {pet.urgent && (
-                      <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">Urgente</span>
-                    )}
-                  </div>
-                  <div className="p-3">
-                    <p className="font-semibold text-gray-900 group-hover:text-primary-600 transition">{pet.name}</p>
-                    <p className="text-xs text-gray-400">{pet.breed || pet.species}</p>
-                  </div>
-                </div>
-              </Link>
+            {pets.map((pet: Pet) => (
+              <PetCard key={pet._id} pet={pet} />
             ))}
           </div>
         )}
