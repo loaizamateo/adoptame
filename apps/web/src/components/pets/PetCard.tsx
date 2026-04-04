@@ -46,7 +46,7 @@ export function PetCard({ pet }: Props) {
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(pet._id) }}
             aria-label={fav ? 'Quitar de favoritos' : 'Guardar en favoritos'}
             className={[
-              'absolute bottom-2 right-2 w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-sm',
+              'absolute bottom-2 right-2 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm',
               fav
                 ? 'bg-red-500 text-white scale-110'
                 : 'bg-white/90 text-gray-400 hover:text-red-500 hover:bg-white',

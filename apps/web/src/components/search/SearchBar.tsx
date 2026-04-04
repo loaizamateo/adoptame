@@ -112,7 +112,7 @@ export function SearchBar() {
       </form>
 
       {open && (
-        <div className="absolute top-full mt-2 w-full bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50">
+        <div className="absolute top-full mt-2 w-full bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50 max-h-[60vh] overflow-y-auto">
           {isEmpty && (
             <div className="px-4 py-6 text-center text-gray-400 text-sm">
               <p className="text-2xl mb-1">🐾</p>

@@ -47,7 +47,7 @@ export function LocationPill({ location, onChangeLocation }: Props) {
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute top-10 left-0 z-20 bg-white rounded-2xl border border-gray-200 shadow-md p-4 w-72">
+          <div className="absolute top-10 left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 z-20 bg-white rounded-2xl border border-gray-200 shadow-md p-4 w-72">
             <p className="text-sm font-semibold text-gray-700 mb-3">¿Dónde buscas?</p>
             <form onSubmit={handleSubmit} className="flex flex-col gap-2">
               <input
