@@ -13,14 +13,17 @@ services:
 
   api:
     build:
-      context: ./apps/api
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: apps/api/Dockerfile.dev
     container_name: adoptame-api
     ports:
       - '3001:3001'
     volumes:
-      - ./apps/api:/app
-      - /app/node_modules
+      - ./apps/api:/app/apps/api
+      - ./packages:/app/packages
+      - /app/apps/api/node_modules
+      - /app/packages/schemas/dist
+      - /app/packages/types/dist
     environment:
       - NODE_ENV=development
       - MONGODB_URI=mongodb://mongodb:27017/adoptame
@@ -31,15 +34,18 @@ services:
 
   web:
     build:
-      context: ./apps/web
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: apps/web/Dockerfile.dev
     container_name: adoptame-web
     ports:
       - '3000:3000'
     volumes:
-      - ./apps/web:/app
-      - /app/node_modules
-      - /app/.next
+      - ./apps/web:/app/apps/web
+      - ./packages:/app/packages
+      - /app/apps/web/node_modules
+      - /app/apps/web/.next
+      - /app/packages/schemas/dist
+      - /app/packages/types/dist
     env_file:
       - ./apps/web/.env
     depends_on:

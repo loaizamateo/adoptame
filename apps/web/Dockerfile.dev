@@ -1,6 +1,22 @@
 FROM node:20-alpine
 WORKDIR /app
+
+# Root workspace files
 COPY package*.json ./
-RUN npm install
-COPY . .
+COPY tsconfig.base.json ./
+
+# Copy and build shared packages
+COPY packages/ ./packages/
+RUN npm install --workspace=@adoptame/schemas --workspace=@adoptame/types --include-workspace-root
+RUN npm run build --workspace=@adoptame/schemas
+RUN npm run build --workspace=@adoptame/types
+
+# Install web deps
+COPY apps/web/package*.json ./apps/web/
+RUN npm install --workspace=@adoptame/web
+
+# Copy web source
+COPY apps/web/ ./apps/web/
+
+WORKDIR /app/apps/web
 CMD ["npm", "run", "dev"]
