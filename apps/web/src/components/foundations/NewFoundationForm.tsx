@@ -11,6 +11,7 @@ import { useAuthStore } from '@/store/auth'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { CitySelect } from '@/components/ui/CitySelect'
+import { LogoUpload } from '@/components/ui/LogoUpload'
 
 export default function NewFoundationForm() {
   const router = useRouter()
@@ -18,6 +19,7 @@ export default function NewFoundationForm() {
   const [serverError, setServerError] = useState('')
   const [city, setCity] = useState('')
   const [country, setCountry] = useState('')
+  const [logoKey, setLogoKey] = useState('')
 
   const {
     register,
@@ -37,7 +39,7 @@ export default function NewFoundationForm() {
     if (!city || !country) { setServerError('Seleccioná un país y ciudad válidos'); return }
     setServerError('')
     try {
-      const foundation = await createFoundation({ ...data, city, country })
+      const foundation = await createFoundation({ ...data, city, country, ...(logoKey && { logo: logoKey }) })
       router.push(`/fundaciones/${foundation.slug}`)
     } catch (err: any) {
       setServerError(err.response?.data?.error || 'Error al crear la fundación')
@@ -47,6 +49,8 @@ export default function NewFoundationForm() {
   return (
     <Card>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+        <LogoUpload value={logoKey} onChange={setLogoKey} />
+
         <Input
           label="Nombre de la fundación *"
           placeholder="Ej: Fundación Huellitas Felices"
