@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { DonationLinksForm } from '@/components/dashboard/DonationLinksForm'
 import { CitySelect } from '@/components/ui/CitySelect'
+import { LogoUpload } from '@/components/ui/LogoUpload'
 import { updateFoundation } from '@/lib/foundations'
 import { api } from '@/lib/api'
 import type { Foundation } from '@adoptame/types'
@@ -20,6 +21,7 @@ export default function DashboardProfilePage() {
   const [serverError, setServerError] = useState('')
   const [profileCity, setProfileCity] = useState('')
   const [profileCountry, setProfileCountry] = useState('')
+  const [logoKey, setLogoKey] = useState('')
 
   const {
     register,
@@ -36,6 +38,7 @@ export default function DashboardProfilePage() {
         reset(f)
         setProfileCity(f.city || '')
         setProfileCountry(f.country || '')
+        setLogoKey(f.logo || '')
       }
     }).finally(() => setLoading(false))
   }, [reset])
@@ -45,7 +48,7 @@ export default function DashboardProfilePage() {
     setServerError('')
     setSaved(false)
     try {
-      const updated = await updateFoundation(foundation._id, { ...data, city: profileCity, country: profileCountry })
+      const updated = await updateFoundation(foundation._id, { ...data, city: profileCity, country: profileCountry, ...(logoKey && { logo: logoKey }) })
       setFoundation((prev) => ({ ...updated, donationLinks: prev?.donationLinks }))
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
@@ -69,6 +72,8 @@ export default function DashboardProfilePage() {
       {/* Datos generales */}
       <Card>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+          <LogoUpload value={logoKey} onChange={setLogoKey} label="Logo de la fundación" />
+
           <Input label="Nombre *" error={errors.name?.message} {...register('name')} />
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-1">Descripción *</label>
