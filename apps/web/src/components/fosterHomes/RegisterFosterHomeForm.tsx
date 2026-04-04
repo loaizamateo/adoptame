@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createFosterHome } from '@/lib/fosterHomes'
 import { Button } from '@/components/ui/Button'
+import { trackFosterHomeRegistered } from '@/lib/analytics'
 import { CitySelect } from '@/components/ui/CitySelect'
 import { useAuthStore } from '@/store/auth'
 
@@ -55,6 +56,7 @@ export function RegisterFosterHomeForm() {
     setError('')
     try {
       await createFosterHome(form as any)
+      trackFosterHomeRegistered(form.city, form.country)
       router.push('/hogares?registered=1')
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Ocurrió un error. Intentá de nuevo.')
