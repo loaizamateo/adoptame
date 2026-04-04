@@ -3,6 +3,7 @@ import { createFoundationSchema, updateFoundationSchema } from '@adoptame/schema
 import { Foundation } from '../models/Foundation'
 import { User } from '../models/User'
 import { Pet } from '../models/Pet'
+import { signPhotoUrls } from '../services/storage'
 
 export async function foundationRoutes(fastify: FastifyInstance) {
   const authenticate = (fastify as any).authenticate
@@ -25,9 +26,17 @@ export async function foundationRoutes(fastify: FastifyInstance) {
     const foundation = await Foundation.findOne({ slug })
     if (!foundation) return reply.status(404).send({ success: false, error: 'Fundación no encontrada' })
 
-    const pets = await Pet.find({ foundationId: foundation._id, status: 'available' })
+    const rawPets = await Pet.find({ foundationId: foundation._id, status: 'available' })
       .sort({ urgent: -1, createdAt: -1 })
       .limit(12)
+      .lean()
+
+    const pets = await Promise.all(
+      rawPets.map(async (pet: any) => {
+        if (pet.photos?.length) pet.photos = await signPhotoUrls(pet.photos)
+        return pet
+      })
+    )
 
     return reply.send({ success: true, data: { foundation, pets } })
   })
