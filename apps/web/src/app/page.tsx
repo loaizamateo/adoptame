@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { MarketplaceFeed } from '@/components/home/MarketplaceFeed'
+import { SearchBar } from '@/components/search/SearchBar'
 
 export const metadata: Metadata = {
   alternates: { canonical: 'https://adoptame.app' },
@@ -32,9 +33,15 @@ export default function HomePage() {
               Encuentra a tu compañero<br />
               <span className="text-accent-300">ideal para adoptar</span>
             </h1>
-            <p className="text-primary-100 text-lg mb-8 max-w-xl mx-auto">
+            <p className="text-primary-100 text-lg mb-6 max-w-xl mx-auto">
               Conectamos mascotas que buscan hogar con familias amorosas en toda Latinoamérica.
             </p>
+
+            {/* Buscador unificado */}
+            <div className="mb-6 px-4">
+              <SearchBar />
+            </div>
+
             <div className="flex gap-3 justify-center flex-wrap">
               <Link
                 href="/adoptar"
