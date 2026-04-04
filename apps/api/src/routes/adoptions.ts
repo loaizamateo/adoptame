@@ -128,7 +128,7 @@ export async function adoptionRoutes(fastify: FastifyInstance) {
       return reply.status(403).send({ success: false, error: 'No autorizado' })
     }
 
-    const adoptionObj = adoption.toObject()
+    const adoptionObj = adoption.toObject() as any
     if (adoptionObj.petId?.photos?.length) adoptionObj.petId.photos = await signPhotoUrls(adoptionObj.petId.photos)
     return reply.send({ success: true, data: adoptionObj })
   })
