@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/Card'
 import { createPet, updatePet, uploadPetPhoto } from '@/lib/pets'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { CitySelect } from '@/components/ui/CitySelect'
 import type { Pet } from '@adoptame/types'
 
 interface Props {
@@ -20,6 +21,8 @@ export default function PetForm({ pet }: Props) {
   const [serverError, setServerError] = useState('')
   // photoKeys: lo que se guarda en DB (keys de B2 o URL firmada existente)
   // photoDisplayUrls: lo que se muestra en el preview (blob URL o URL firmada)
+  const [petCity, setPetCity] = useState(pet?.city || '')
+  const [petCountry, setPetCountry] = useState(pet?.country || '')
   const [photoKeys, setPhotoKeys] = useState<string[]>(() => {
     if (!pet?.photos) return []
     // Extraer el key de las URLs firmadas: .../pets/uuid.png?X-Amz-... → pets/uuid.png
@@ -95,6 +98,7 @@ export default function PetForm({ pet }: Props) {
   }
 
   const onSubmit = async (data: CreatePetInput) => {
+    if (!petCity || !petCountry) return
     setServerError('')
     try {
       if (pet) {
@@ -179,10 +183,14 @@ export default function PetForm({ pet }: Props) {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <Input label="Ciudad *" placeholder="Bogotá" error={errors.city?.message} {...register('city')} />
-          <Input label="País *" placeholder="Colombia" error={errors.country?.message} {...register('country')} />
-        </div>
+        <CitySelect
+          value={petCity}
+          country={petCountry}
+          onCityChange={setPetCity}
+          onCountryChange={(c) => { setPetCountry(c); setPetCity('') }}
+          error={errors.city?.message || errors.country?.message}
+          required
+        />
 
         <div>
           <label className="text-sm font-medium text-gray-700 block mb-1">Descripción *</label>

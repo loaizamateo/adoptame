@@ -10,11 +10,14 @@ import { createFoundation } from '@/lib/foundations'
 import { useAuthStore } from '@/store/auth'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { CitySelect } from '@/components/ui/CitySelect'
 
 export default function NewFoundationForm() {
   const router = useRouter()
   const { user } = useAuthStore()
   const [serverError, setServerError] = useState('')
+  const [city, setCity] = useState('')
+  const [country, setCountry] = useState('')
 
   const {
     register,
@@ -31,9 +34,10 @@ export default function NewFoundationForm() {
   }
 
   const onSubmit = async (data: CreateFoundationInput) => {
+    if (!city || !country) { setServerError('Seleccioná un país y ciudad válidos'); return }
     setServerError('')
     try {
-      const foundation = await createFoundation(data)
+      const foundation = await createFoundation({ ...data, city, country })
       router.push(`/fundaciones/${foundation.slug}`)
     } catch (err: any) {
       setServerError(err.response?.data?.error || 'Error al crear la fundación')
@@ -59,20 +63,14 @@ export default function NewFoundationForm() {
           />
           {errors.description && <p className="text-xs text-red-500">{errors.description.message}</p>}
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <Input
-            label="Ciudad *"
-            placeholder="Bogotá"
-            error={errors.city?.message}
-            {...register('city')}
-          />
-          <Input
-            label="País *"
-            placeholder="Colombia"
-            error={errors.country?.message}
-            {...register('country')}
-          />
-        </div>
+        <CitySelect
+          value={city}
+          country={country}
+          onCityChange={setCity}
+          onCountryChange={setCountry}
+          error={errors.city?.message || errors.country?.message}
+          required
+        />
         <Input
           label="Teléfono / WhatsApp"
           placeholder="+57 300 000 0000"
