@@ -19,14 +19,15 @@
 | E-05 | Búsqueda & Filtros | ✅ Completa (básico) |
 | E-06 | Solicitudes de Adopción | ✅ Completa |
 | E-07 | Panel de Fundación (Dashboard) | ✅ Completa |
-| E-08 | Hogares de Paso & Voluntariado | ⬜ Pendiente |
+| E-08 | Hogares de Paso & Voluntariado | ✅ Completa |
 | E-09 | Notificaciones & Email | ✅ Completa |
 | E-10 | SEO & Performance | ✅ Completa |
 | E-11 | Admin Global | ✅ Completa |
-| E-12 | Open Source — Comunidad & Docs | ⬜ Pendiente |
+| E-12 | Open Source — Comunidad & Docs | ✅ Completa |
 | E-13 | Design System & Branding | ✅ Completa |
 | E-14 | Deploy & DevOps | ✅ Completa |
 | E-15 | Landing Marketplace | ✅ Completa |
+| E-16 | Donaciones Directas a Fundaciones | ✅ Completa |
 
 ---
 
@@ -104,6 +105,9 @@
 - [x] Página `/adoptar` con filtros
 - [x] Búsqueda por texto libre
 
+### Completado extra
+- [x] Buscador unificado en landing — `GET /api/v1/search?q=` busca mascotas y fundaciones en tiempo real
+
 ### Pendiente
 - [ ] **E05-T05** — Mapa de mascotas por ciudad (Leaflet.js)
 - [ ] **E05-T06** — Favoritos (guardar mascotas)
@@ -132,13 +136,13 @@
 
 ---
 
-## E-08 — Hogares de Paso & Voluntariado ⬜
+## E-08 — Hogares de Paso & Voluntariado ✅
 
-- [ ] Modelo `FosterHome`
-- [ ] Registro como hogar de paso
-- [ ] Fundación busca hogares disponibles
-- [ ] Solicitud de acogida temporal
-- [ ] Sección voluntariado
+- [x] Modelo `FosterHome` (species, sizes, capacity, acceptsKids, acceptsPets, status)
+- [x] API REST `/api/v1/foster-homes` (6 endpoints)
+- [x] Página pública `/hogares` con filtros y cards
+- [x] Formulario `/hogares/registrar`
+- [x] Link en Navbar y sidebar del dashboard de fundaciones
 
 ---
 
@@ -175,13 +179,13 @@
 
 ---
 
-## E-12 — Open Source ⬜
+## E-12 — Open Source ✅
 
-- [ ] README completo con screenshots y GIF demo
-- [ ] CONTRIBUTING.md con guía de setup local
-- [ ] Issue/PR templates
-- [ ] GitHub Projects público con este backlog
-- [ ] Demo siempre actualizada con `main`
+- [x] README completo (features, stack, inicio rápido, seed, credenciales)
+- [x] CONTRIBUTING.md completo (setup, flujo, convenciones, estructura)
+- [x] Issue templates: bug, feature request, pregunta
+- [x] PR template mejorado
+- [x] `.github/labels.yml` con labels recomendados
 
 ---
 
@@ -236,4 +240,16 @@
 
 ---
 
-_Última actualización: 2026-04-03 (PR #52 /pets/mine, PR #53 admin + emails)_
+_Última actualización: 2026-04-03 (PRs #55–#68 — E-08, E-12, E-16, buscador unificado, fix fotos B2, dominio custom)_
+
+---
+
+## E-16 — Donaciones Directas a Fundaciones ✅
+
+- [x] Campo `donationLinks` en modelo `Foundation` (Nequi, Daviplata, Bancolombia, PayPal, MercadoPago, otro)
+- [x] `donationLinksSchema` en `packages/schemas`
+- [x] `updateFoundationSchema` extendido con `donationLinks`
+- [x] `DonationLinksForm` en dashboard — fundación configura sus métodos
+- [x] `DonationSection` en perfil público `/fundaciones/[slug]`
+- [x] Links externos abren en nueva pestaña, números se copian al portapapeles
+- [x] Adoptame no intermedia pagos — 100% directo a la fundación
