@@ -1,9 +1,19 @@
 import { sendEmail, emailTemplates } from '../services/email'
+import { signPhotoUrls } from '../services/storage'
 import { FastifyInstance } from 'fastify'
 import { createAdoptionRequestSchema } from '@adoptame/schemas'
 import { AdoptionRequest } from '../models/AdoptionRequest'
 import { Pet } from '../models/Pet'
 import { Foundation } from '../models/Foundation'
+
+
+async function signAdoptionPhotos(adoptions: any[]): Promise<any[]> {
+  return Promise.all(adoptions.map(async (a) => {
+    const obj = a.toObject ? a.toObject() : a
+    if (obj.petId?.photos?.length) obj.petId.photos = await signPhotoUrls(obj.petId.photos)
+    return obj
+  }))
+}
 
 export async function adoptionRoutes(fastify: FastifyInstance) {
   const authenticate = (fastify as any).authenticate
@@ -67,10 +77,11 @@ export async function adoptionRoutes(fastify: FastifyInstance) {
   // GET /adoptions/mine — solicitudes del adoptante
   fastify.get('/mine', { onRequest: [authenticate] }, async (request, reply) => {
     const user = (request as any).user
-    const adoptions = await AdoptionRequest.find({ userId: user.userId })
+    const rawAdoptions = await AdoptionRequest.find({ userId: user.userId })
       .populate('petId', 'name photos species breed city')
       .populate('foundationId', 'name slug')
       .sort({ createdAt: -1 })
+    const adoptions = await signAdoptionPhotos(rawAdoptions)
     return reply.send({ success: true, data: adoptions })
   })
 
@@ -88,11 +99,11 @@ export async function adoptionRoutes(fastify: FastifyInstance) {
     const filter: Record<string, any> = { foundationId: foundation._id }
     if (query.status) filter.status = query.status
 
-    const adoptions = await AdoptionRequest.find(filter)
+    const rawAdoptions = await AdoptionRequest.find(filter)
       .populate('petId', 'name photos species breed city')
       .populate('userId', 'name email')
       .sort({ createdAt: -1 })
-
+    const adoptions = await signAdoptionPhotos(rawAdoptions)
     return reply.send({ success: true, data: adoptions })
   })
 
@@ -117,7 +128,9 @@ export async function adoptionRoutes(fastify: FastifyInstance) {
       return reply.status(403).send({ success: false, error: 'No autorizado' })
     }
 
-    return reply.send({ success: true, data: adoption })
+    const adoptionObj = adoption.toObject()
+    if (adoptionObj.petId?.photos?.length) adoptionObj.petId.photos = await signPhotoUrls(adoptionObj.petId.photos)
+    return reply.send({ success: true, data: adoptionObj })
   })
 
   // PATCH /adoptions/:id/status — fundación actualiza estado
