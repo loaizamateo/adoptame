@@ -1,11 +1,18 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Pet } from '@adoptame/types'
 import { PET_LABELS } from '@/lib/utils'
+import { useFavoritesStore } from '@/store/favorites'
+import { Heart } from 'lucide-react'
 
 interface Props { pet: Pet }
 
 export function PetCard({ pet }: Props) {
+  const { isFavorite, toggle } = useFavoritesStore()
+  const fav = isFavorite(pet._id)
+
   return (
     <Link href={`/mascotas/${pet._id}`} prefetch={false}>
       <article className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-md hover:border-primary-200 transition-all group cursor-pointer">
@@ -33,6 +40,20 @@ export function PetCard({ pet }: Props) {
           <span className="absolute top-2 right-2 bg-white/90 text-gray-600 text-xs px-2 py-0.5 rounded-full">
             {pet.sex === 'male' ? '♂' : '♀'}
           </span>
+
+          {/* Favorite button */}
+          <button
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(pet._id) }}
+            aria-label={fav ? 'Quitar de favoritos' : 'Guardar en favoritos'}
+            className={[
+              'absolute bottom-2 right-2 w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-sm',
+              fav
+                ? 'bg-red-500 text-white scale-110'
+                : 'bg-white/90 text-gray-400 hover:text-red-500 hover:bg-white',
+            ].join(' ')}
+          >
+            <Heart size={15} fill={fav ? 'currentColor' : 'none'} />
+          </button>
         </div>
 
         {/* Info */}
