@@ -6,6 +6,7 @@ import { PetCard } from './PetCard'
 import { PetCardSkeleton } from './PetCardSkeleton'
 import type { Pet, PetFilters } from '@adoptame/types'
 import { Button } from '@/components/ui/Button'
+import { SlidersHorizontal, X } from 'lucide-react'
 
 const SPECIES = [
   { value: '', label: 'Todos', emoji: '🐾' },
@@ -35,6 +36,8 @@ export default function PetsExplorer() {
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   const [filters, setFilters] = useState<PetFilters>({
     species: undefined,
@@ -66,10 +69,38 @@ export default function PetsExplorer() {
     setPage(1)
   }
 
+  const activeFilterCount = [
+    filters.species, filters.size, filters.age, filters.city, filters.urgent,
+  ].filter(Boolean).length + (search ? 1 : 0)
+
   return (
     <div className="flex flex-col lg:flex-row gap-6">
+      {/* Mobile filter toggle */}
+      <div className="lg:hidden flex items-center justify-between">
+        <button
+          onClick={() => setFiltersOpen(!filtersOpen)}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-700 hover:border-primary-400 hover:text-primary-600 transition bg-white"
+        >
+          <SlidersHorizontal size={16} />
+          Filtros
+          {activeFilterCount > 0 && (
+            <span className="bg-primary-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              {activeFilterCount}
+            </span>
+          )}
+        </button>
+        {activeFilterCount > 0 && (
+          <button
+            onClick={() => { setFilters({}); setSearch(''); setPage(1) }}
+            className="text-xs text-gray-400 hover:text-red-500 transition flex items-center gap-1"
+          >
+            <X size={12} /> Limpiar
+          </button>
+        )}
+      </div>
+
       {/* Panel de filtros */}
-      <aside className="lg:w-56 flex-shrink-0">
+      <aside className={`lg:w-56 flex-shrink-0 ${filtersOpen ? 'block' : 'hidden'} lg:block`}>
         <div className="bg-white border border-gray-100 rounded-2xl p-4 sticky top-20 space-y-5">
           {/* Búsqueda */}
           <div>
@@ -186,13 +217,13 @@ export default function PetsExplorer() {
             {/* Paginación */}
             {totalPages > 1 && (
               <div className="flex justify-center gap-2 mt-8">
-                <Button variant="secondary" size="sm" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
+                <Button variant="secondary" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
                   ← Anterior
                 </Button>
                 <span className="text-sm text-gray-500 flex items-center px-3">
                   {page} / {totalPages}
                 </span>
-                <Button variant="secondary" size="sm" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>
+                <Button variant="secondary" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>
                   Siguiente →
                 </Button>
               </div>

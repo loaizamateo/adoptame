@@ -29,11 +29,11 @@ export default function HomePage() {
         <section className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white">
           <div className="container mx-auto px-4 py-14 text-center">
 
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight">
               Encuentra a tu compañero<br />
               <span className="text-accent-300">ideal para adoptar</span>
             </h1>
-            <p className="text-primary-100 text-lg mb-6 max-w-xl mx-auto">
+            <p className="text-primary-100 text-base sm:text-lg mb-6 max-w-xl mx-auto">
               Conectamos mascotas que buscan hogar con familias amorosas en toda Latinoamérica.
             </p>
 
@@ -42,7 +42,7 @@ export default function HomePage() {
               <SearchBar />
             </div>
 
-            <div className="flex gap-3 justify-center flex-wrap">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
               <Link
                 href="/adoptar"
                 className="bg-accent-500 text-white px-7 py-3 rounded-full font-semibold hover:bg-accent-600 transition shadow-soft text-base"
@@ -65,7 +65,7 @@ export default function HomePage() {
         {/* Stats rápidos */}
         <section className="bg-white border-t border-gray-100 py-10">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-3 gap-6 text-center max-w-lg mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-center max-w-lg mx-auto">
               {[
                 { value: '100%', label: 'Gratis para fundaciones' },
                 { value: 'LATAM', label: 'Toda Latinoamérica' },
