@@ -3,11 +3,14 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useAuthStore } from '@/store/auth'
+import { useFavoritesStore } from '@/store/favorites'
 import { Button } from '@/components/ui/Button'
 import { useRouter } from 'next/navigation'
+import { Heart } from 'lucide-react'
 
 export function Navbar() {
   const { user, isAuthenticated, logout } = useAuthStore()
+  const favCount = useFavoritesStore((s) => s.count())
   const router = useRouter()
 
   const handleLogout = () => {
@@ -33,6 +36,20 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Favorites shortcut */}
+          <Link
+            href="/favoritos"
+            aria-label="Mis favoritos"
+            className="relative w-9 h-9 flex items-center justify-center rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 transition"
+          >
+            <Heart size={18} />
+            {favCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-0.5">
+                {favCount > 99 ? '99+' : favCount}
+              </span>
+            )}
+          </Link>
+
           {isAuthenticated() && user ? (
             <>
               {user.role === 'foundation' && (
