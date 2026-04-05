@@ -32,7 +32,10 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getDashboardStats().then(setStats).finally(() => setLoading(false))
+    getDashboardStats()
+      .then(setStats)
+      .catch(() => {/* stats stays null, handled below */})
+      .finally(() => setLoading(false))
   }, [])
 
   if (loading) {

@@ -54,5 +54,6 @@ const PetSchema = new Schema<IPet>(
 PetSchema.index({ species: 1, status: 1, city: 1, country: 1 })
 PetSchema.index({ urgent: -1, createdAt: -1 })
 PetSchema.index({ name: 'text', description: 'text', breed: 'text' })
+PetSchema.index({ foundationId: 1, status: 1 })
 
 export const Pet = mongoose.model<IPet>('Pet', PetSchema)

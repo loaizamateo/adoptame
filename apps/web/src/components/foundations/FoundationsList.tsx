@@ -8,11 +8,13 @@ import type { Foundation } from '@adoptame/types'
 export default function FoundationsList() {
   const [foundations, setFoundations] = useState<Foundation[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   const [search, setSearch] = useState('')
 
   useEffect(() => {
     getFoundations()
       .then(setFoundations)
+      .catch(() => setError(true))
       .finally(() => setLoading(false))
   }, [])
 
@@ -28,6 +30,15 @@ export default function FoundationsList() {
         {[...Array(6)].map((_, i) => (
           <div key={i} className="bg-gray-100 rounded-2xl h-32 animate-pulse" />
         ))}
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-16 text-gray-400">
+        <span className="text-5xl block mb-3">⚠️</span>
+        <p>No se pudieron cargar las fundaciones. Intenta de nuevo.</p>
       </div>
     )
   }

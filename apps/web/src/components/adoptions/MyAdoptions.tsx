@@ -16,13 +16,26 @@ const STATUS_LABELS: Record<string, { label: string; color: string; emoji: strin
 export default function MyAdoptions() {
   const [adoptions, setAdoptions] = useState<AdoptionRequest[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
-    getMyAdoptions().then(setAdoptions).finally(() => setLoading(false))
+    getMyAdoptions()
+      .then(setAdoptions)
+      .catch(() => setError(true))
+      .finally(() => setLoading(false))
   }, [])
 
   if (loading) {
     return <div className="space-y-3">{[...Array(3)].map((_, i) => <div key={i} className="h-20 bg-gray-100 rounded-2xl animate-pulse" />)}</div>
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-16 text-gray-400">
+        <span className="text-5xl block mb-3">⚠️</span>
+        <p>No se pudieron cargar tus solicitudes. Intenta de nuevo.</p>
+      </div>
+    )
   }
 
   if (adoptions.length === 0) {
