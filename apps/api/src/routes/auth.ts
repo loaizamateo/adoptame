@@ -47,7 +47,7 @@ export async function authRoutes(fastify: FastifyInstance) {
       { expiresIn: env.JWT_EXPIRES_IN }
     )
     const refreshToken = fastify.jwt.sign(
-      { userId: user._id, type: 'refresh' },
+      { userId: user._id, type: 'refresh', tokenVersion: user.tokenVersion },
       { expiresIn: env.JWT_REFRESH_EXPIRES_IN }
     )
 
@@ -88,7 +88,7 @@ export async function authRoutes(fastify: FastifyInstance) {
       { expiresIn: env.JWT_EXPIRES_IN }
     )
     const refreshToken = fastify.jwt.sign(
-      { userId: user._id, type: 'refresh' },
+      { userId: user._id, type: 'refresh', tokenVersion: user.tokenVersion },
       { expiresIn: env.JWT_REFRESH_EXPIRES_IN }
     )
 
@@ -115,6 +115,10 @@ export async function authRoutes(fastify: FastifyInstance) {
       const user = await User.findById(payload.userId)
       if (!user || !user.active) {
         return reply.status(401).send({ success: false, error: 'Usuario no encontrado o inactivo' })
+      }
+
+      if (payload.tokenVersion !== user.tokenVersion) {
+        return reply.status(401).send({ success: false, error: 'Token inválido o expirado' })
       }
 
       const accessToken = fastify.jwt.sign(
@@ -218,5 +222,12 @@ export async function authRoutes(fastify: FastifyInstance) {
       resetPasswordExpires: { $gt: new Date() },
     })
     return reply.send({ success: true, data: { valid: !!user } })
+  })
+
+  // POST /auth/logout
+  fastify.post('/logout', { onRequest: [authenticate] }, async (request, reply) => {
+    const payload = request.user as any
+    await User.findByIdAndUpdate(payload.userId, { $inc: { tokenVersion: 1 } })
+    return reply.send({ success: true, message: 'Sesión cerrada correctamente' })
   })
 }

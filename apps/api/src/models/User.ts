@@ -16,6 +16,7 @@ export interface IUser extends Document {
   resetPasswordToken?: string
   resetPasswordExpires?: Date
   active: boolean
+  tokenVersion: number
   comparePassword(candidate: string): Promise<boolean>
 }
 
@@ -33,6 +34,7 @@ const UserSchema = new Schema<IUser>(
     resetPasswordToken: String,
     resetPasswordExpires: Date,
     active: { type: Boolean, default: true },
+    tokenVersion: { type: Number, default: 0 },
   },
   { timestamps: true }
 )
