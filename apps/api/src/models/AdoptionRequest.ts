@@ -41,6 +41,10 @@ const AdoptionRequestSchema = new Schema<IAdoptionRequest>(
   { timestamps: true }
 )
 
+AdoptionRequestSchema.index({ userId: 1, createdAt: -1 })
+AdoptionRequestSchema.index({ foundationId: 1, status: 1, createdAt: -1 })
+AdoptionRequestSchema.index({ petId: 1, userId: 1, status: 1 })
+
 export const AdoptionRequest = mongoose.model<IAdoptionRequest>(
   'AdoptionRequest',
   AdoptionRequestSchema

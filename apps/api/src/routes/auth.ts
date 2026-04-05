@@ -6,16 +6,30 @@ import {
   forgotPasswordSchema,
   resetPasswordSchema,
 } from '@adoptame/schemas'
+import { z } from 'zod'
 import { User } from '../models/User'
 import { Foundation } from '../models/Foundation'
 import { env } from '../config/env'
 import crypto from 'crypto'
 
+const updateProfileSchema = z.object({
+  name: z.string().min(2).max(100).optional(),
+  city: z.string().max(100).optional(),
+  country: z.string().max(100).optional(),
+  avatar: z.string().url().optional().or(z.literal('')),
+})
+
+function hashToken(token: string): string {
+  return crypto.createHash('sha256').update(token).digest('hex')
+}
+
 export async function authRoutes(fastify: FastifyInstance) {
   const authenticate = (fastify as any).authenticate
 
   // POST /auth/register
-  fastify.post('/register', async (request, reply) => {
+  fastify.post('/register', {
+    config: { rateLimit: { max: 10, timeWindow: '1 minute' } },
+  }, async (request, reply) => {
     const body = registerSchema.safeParse(request.body)
     if (!body.success) {
       return reply.status(400).send({ success: false, error: body.error.flatten() })
@@ -47,7 +61,9 @@ export async function authRoutes(fastify: FastifyInstance) {
   })
 
   // POST /auth/login
-  fastify.post('/login', async (request, reply) => {
+  fastify.post('/login', {
+    config: { rateLimit: { max: 10, timeWindow: '1 minute' } },
+  }, async (request, reply) => {
     const body = loginSchema.safeParse(request.body)
     if (!body.success) {
       return reply.status(400).send({ success: false, error: body.error.flatten() })
@@ -129,11 +145,15 @@ export async function authRoutes(fastify: FastifyInstance) {
   // PATCH /auth/me — actualizar perfil
   fastify.patch('/me', { onRequest: [authenticate] }, async (request, reply) => {
     const payload = request.user as any
-    const { name, city, country, avatar } = request.body as any
+
+    const body = updateProfileSchema.safeParse(request.body)
+    if (!body.success) {
+      return reply.status(400).send({ success: false, error: body.error.flatten() })
+    }
 
     const user = await User.findByIdAndUpdate(
       payload.userId,
-      { name, city, country, avatar },
+      body.data,
       { new: true, runValidators: true }
     )
 
@@ -141,7 +161,9 @@ export async function authRoutes(fastify: FastifyInstance) {
   })
 
   // POST /auth/forgot-password
-  fastify.post('/forgot-password', async (request, reply) => {
+  fastify.post('/forgot-password', {
+    config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
+  }, async (request, reply) => {
     const body = forgotPasswordSchema.safeParse(request.body)
     if (!body.success) {
       return reply.status(400).send({ success: false, error: body.error.flatten() })
@@ -149,11 +171,11 @@ export async function authRoutes(fastify: FastifyInstance) {
 
     const user = await User.findOne({ email: body.data.email })
     if (user) {
-      const token = crypto.randomBytes(32).toString('hex')
-      user.resetPasswordToken = token
+      const rawToken = crypto.randomBytes(32).toString('hex')
+      user.resetPasswordToken = hashToken(rawToken)
       user.resetPasswordExpires = new Date(Date.now() + 3600000) // 1 hora
       await user.save()
-      const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`
+      const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${rawToken}`
       const tpl = emailTemplates.resetPassword(user.name, resetUrl)
       sendEmail({ to: user.email, ...tpl }).catch(console.error)
     }
@@ -172,7 +194,7 @@ export async function authRoutes(fastify: FastifyInstance) {
     }
 
     const user = await User.findOne({
-      resetPasswordToken: body.data.token,
+      resetPasswordToken: hashToken(body.data.token),
       resetPasswordExpires: { $gt: new Date() },
     })
 
@@ -192,7 +214,7 @@ export async function authRoutes(fastify: FastifyInstance) {
   fastify.get('/validate-reset-token/:token', async (request, reply) => {
     const { token } = request.params as any
     const user = await User.findOne({
-      resetPasswordToken: token,
+      resetPasswordToken: hashToken(token),
       resetPasswordExpires: { $gt: new Date() },
     })
     return reply.send({ success: true, data: { valid: !!user } })
