@@ -25,6 +25,7 @@ const STATUS_COLOR: Record<string, string> = {
 export default function FoundationAdoptions() {
   const [adoptions, setAdoptions] = useState<AdoptionRequest[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
   const [filter, setFilter] = useState('')
   const [expanded, setExpanded] = useState<string | null>(null)
   const [notes, setNotes] = useState('')
@@ -32,7 +33,15 @@ export default function FoundationAdoptions() {
 
   const fetchAdoptions = async () => {
     setLoading(true)
-    getFoundationAdoptions(filter || undefined).then(setAdoptions).finally(() => setLoading(false))
+    setError(false)
+    try {
+      const data = await getFoundationAdoptions(filter || undefined)
+      setAdoptions(data)
+    } catch {
+      setError(true)
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => { fetchAdoptions() }, [filter])
@@ -68,6 +77,12 @@ export default function FoundationAdoptions() {
 
       {loading ? (
         <div className="space-y-3">{[...Array(4)].map((_, i) => <div key={i} className="h-24 bg-gray-100 rounded-2xl animate-pulse" />)}</div>
+      ) : error ? (
+        <div className="text-center py-16 text-gray-400">
+          <span className="text-5xl block mb-3">⚠️</span>
+          <p className="mb-4">No se pudieron cargar las solicitudes</p>
+          <button onClick={fetchAdoptions} className="text-primary-600 font-medium hover:underline text-sm">Reintentar</button>
+        </div>
       ) : adoptions.length === 0 ? (
         <div className="text-center py-16 text-gray-400">
           <span className="text-5xl block mb-3">📭</span>

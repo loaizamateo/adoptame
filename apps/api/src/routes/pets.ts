@@ -4,6 +4,11 @@ import { createPetSchema, updatePetSchema } from '@adoptame/schemas'
 import { Pet } from '../models/Pet'
 import { Foundation } from '../models/Foundation'
 
+/** Escape special regex chars to prevent ReDoS from user-supplied strings */
+function escapeRegex(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
 export async function petRoutes(fastify: FastifyInstance) {
   const authenticate = (fastify as any).authenticate
 
@@ -16,7 +21,7 @@ export async function petRoutes(fastify: FastifyInstance) {
     if (query.size) filter.size = query.size
     if (query.age) filter.age = query.age
     if (query.sex) filter.sex = query.sex
-    if (query.city) filter.city = new RegExp(query.city, 'i')
+    if (query.city) filter.city = { $regex: escapeRegex(query.city), $options: 'i' }
     if (query.country) filter.country = query.country
     if (query.compatibleWithKids === 'true') filter.compatibleWithKids = true
     if (query.compatibleWithPets === 'true') filter.compatibleWithPets = true
