@@ -8,6 +8,7 @@ import { useFavoritesStore } from '@/store/favorites'
 import { Button } from '@/components/ui/Button'
 import { useRouter } from 'next/navigation'
 import { Heart, Menu, X } from 'lucide-react'
+import { api } from '@/lib/api'
 
 const NAV_LINKS = [
   { href: '/adoptar', label: 'Adoptar' },
@@ -22,7 +23,8 @@ export function Navbar() {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try { await api.post('/auth/logout') } catch { /* best-effort */ }
     logout()
     setMobileOpen(false)
     router.push('/')
