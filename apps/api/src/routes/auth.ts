@@ -11,6 +11,7 @@ import { User } from '../models/User'
 import { Foundation } from '../models/Foundation'
 import { env } from '../config/env'
 import crypto from 'crypto'
+import type { JwtPayload } from '../types/fastify'
 
 const updateProfileSchema = z.object({
   name: z.string().min(2).max(100).optional(),
@@ -24,7 +25,7 @@ function hashToken(token: string): string {
 }
 
 export async function authRoutes(fastify: FastifyInstance) {
-  const authenticate = (fastify as any).authenticate
+  const { authenticate } = fastify
 
   // POST /auth/register
   fastify.post('/register', {
@@ -109,7 +110,7 @@ export async function authRoutes(fastify: FastifyInstance) {
     }
 
     try {
-      const payload = fastify.jwt.verify(refreshToken) as any
+      const payload = fastify.jwt.verify<JwtPayload>(refreshToken)
       if (payload.type !== 'refresh') throw new Error('Token inválido')
 
       const user = await User.findById(payload.userId)
@@ -134,8 +135,7 @@ export async function authRoutes(fastify: FastifyInstance) {
 
   // GET /auth/me
   fastify.get('/me', { onRequest: [authenticate] }, async (request, reply) => {
-    const payload = request.user as any
-    const user = await User.findById(payload.userId)
+    const user = await User.findById(request.user.userId)
     if (!user) return reply.status(404).send({ success: false, error: 'Usuario no encontrado' })
 
     let foundation = null
@@ -148,15 +148,13 @@ export async function authRoutes(fastify: FastifyInstance) {
 
   // PATCH /auth/me — actualizar perfil
   fastify.patch('/me', { onRequest: [authenticate] }, async (request, reply) => {
-    const payload = request.user as any
-
     const body = updateProfileSchema.safeParse(request.body)
     if (!body.success) {
       return reply.status(400).send({ success: false, error: body.error.flatten() })
     }
 
     const user = await User.findByIdAndUpdate(
-      payload.userId,
+      request.user.userId,
       body.data,
       { new: true, runValidators: true }
     )
@@ -215,8 +213,8 @@ export async function authRoutes(fastify: FastifyInstance) {
   })
 
   // GET /auth/validate-reset-token/:token
-  fastify.get('/validate-reset-token/:token', async (request, reply) => {
-    const { token } = request.params as any
+  fastify.get<{ Params: { token: string } }>('/validate-reset-token/:token', async (request, reply) => {
+    const { token } = request.params
     const user = await User.findOne({
       resetPasswordToken: hashToken(token),
       resetPasswordExpires: { $gt: new Date() },
@@ -226,8 +224,7 @@ export async function authRoutes(fastify: FastifyInstance) {
 
   // POST /auth/logout
   fastify.post('/logout', { onRequest: [authenticate] }, async (request, reply) => {
-    const payload = request.user as any
-    await User.findByIdAndUpdate(payload.userId, { $inc: { tokenVersion: 1 } })
+    await User.findByIdAndUpdate(request.user.userId, { $inc: { tokenVersion: 1 } })
     return reply.send({ success: true, message: 'Sesión cerrada correctamente' })
   })
 }

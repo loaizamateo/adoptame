@@ -19,18 +19,27 @@ const fosterHomeSchema = z.object({
 
 const updateFosterHomeSchema = fosterHomeSchema.partial()
 
+interface FosterHomeQuery {
+  city?: string
+  species?: string
+  size?: string
+  status?: string
+  page?: string
+  limit?: string
+}
+
 /** Escape special regex chars to prevent ReDoS from user-supplied strings */
 function escapeRegex(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
 export async function fosterHomeRoutes(fastify: FastifyInstance) {
-  const authenticate = (fastify as any).authenticate
+  const { authenticate } = fastify
 
   // GET /foster-homes — listado público con filtros
-  fastify.get('/', async (request, reply) => {
-    const { city, species, size, status = 'available', page = '1', limit = '12' } = request.query as any
-    const filter: any = {}
+  fastify.get<{ Querystring: FosterHomeQuery }>('/', async (request, reply) => {
+    const { city, species, size, status = 'available', page = '1', limit = '12' } = request.query
+    const filter: Record<string, unknown> = {}
     if (status) filter.status = status
     if (city) filter.city = { $regex: escapeRegex(city), $options: 'i' }
     if (species) filter.acceptedSpecies = species
@@ -57,15 +66,15 @@ export async function fosterHomeRoutes(fastify: FastifyInstance) {
 
   // GET /foster-homes/mine — hogar del usuario autenticado
   fastify.get('/mine', { onRequest: [authenticate] }, async (request, reply) => {
-    const user = (request as any).user
-    const home = await FosterHome.findOne({ userId: user.userId })
+    const { userId } = request.user
+    const home = await FosterHome.findOne({ userId })
     if (!home) return reply.status(404).send({ success: false, error: 'No tenés un hogar de paso registrado' })
     return reply.send({ success: true, data: home })
   })
 
   // GET /foster-homes/:id — detalle
-  fastify.get('/:id', async (request, reply) => {
-    const { id } = request.params as any
+  fastify.get<{ Params: { id: string } }>('/:id', async (request, reply) => {
+    const { id } = request.params
     const home = await FosterHome.findById(id).populate('userId', 'name avatar city')
     if (!home) return reply.status(404).send({ success: false, error: 'Hogar no encontrado' })
     return reply.send({ success: true, data: home })
@@ -73,8 +82,8 @@ export async function fosterHomeRoutes(fastify: FastifyInstance) {
 
   // POST /foster-homes — registrarse como hogar de paso
   fastify.post('/', { onRequest: [authenticate] }, async (request, reply) => {
-    const user = (request as any).user
-    const existing = await FosterHome.findOne({ userId: user.userId })
+    const { userId } = request.user
+    const existing = await FosterHome.findOne({ userId })
     if (existing) return reply.status(409).send({ success: false, error: 'Ya tenés un hogar de paso registrado' })
 
     const body = fosterHomeSchema.safeParse(request.body)
@@ -82,17 +91,17 @@ export async function fosterHomeRoutes(fastify: FastifyInstance) {
       return reply.status(400).send({ success: false, error: body.error.flatten() })
     }
 
-    const home = await FosterHome.create({ ...body.data, userId: user.userId })
+    const home = await FosterHome.create({ ...body.data, userId })
     return reply.status(201).send({ success: true, data: home })
   })
 
   // PATCH /foster-homes/:id — editar (solo owner o admin)
-  fastify.patch('/:id', { onRequest: [authenticate] }, async (request, reply) => {
-    const user = (request as any).user
-    const { id } = request.params as any
+  fastify.patch<{ Params: { id: string } }>('/:id', { onRequest: [authenticate] }, async (request, reply) => {
+    const { userId, role } = request.user
+    const { id } = request.params
     const home = await FosterHome.findById(id)
     if (!home) return reply.status(404).send({ success: false, error: 'Hogar no encontrado' })
-    if (home.userId.toString() !== user.userId && user.role !== 'admin') {
+    if (home.userId.toString() !== userId && role !== 'admin') {
       return reply.status(403).send({ success: false, error: 'No autorizado' })
     }
 
@@ -107,12 +116,12 @@ export async function fosterHomeRoutes(fastify: FastifyInstance) {
   })
 
   // DELETE /foster-homes/:id — eliminar (solo owner o admin)
-  fastify.delete('/:id', { onRequest: [authenticate] }, async (request, reply) => {
-    const user = (request as any).user
-    const { id } = request.params as any
+  fastify.delete<{ Params: { id: string } }>('/:id', { onRequest: [authenticate] }, async (request, reply) => {
+    const { userId, role } = request.user
+    const { id } = request.params
     const home = await FosterHome.findById(id)
     if (!home) return reply.status(404).send({ success: false, error: 'Hogar no encontrado' })
-    if (home.userId.toString() !== user.userId && user.role !== 'admin') {
+    if (home.userId.toString() !== userId && role !== 'admin') {
       return reply.status(403).send({ success: false, error: 'No autorizado' })
     }
     await home.deleteOne()

@@ -4,16 +4,16 @@ import { AdoptionRequest } from '../models/AdoptionRequest'
 import { Foundation } from '../models/Foundation'
 
 export async function dashboardRoutes(fastify: FastifyInstance) {
-  const authenticate = (fastify as any).authenticate
+  const { authenticate } = fastify
 
   // GET /dashboard/stats — métricas de la fundación
   fastify.get('/stats', { onRequest: [authenticate] }, async (request, reply) => {
-    const user = (request as any).user
-    if (user.role !== 'foundation') {
+    const { userId, role } = request.user
+    if (role !== 'foundation') {
       return reply.status(403).send({ success: false, error: 'Solo fundaciones' })
     }
 
-    const foundation = await Foundation.findOne({ ownerId: user.userId })
+    const foundation = await Foundation.findOne({ ownerId: userId })
     if (!foundation) return reply.status(404).send({ success: false, error: 'Fundación no encontrada' })
 
     const fId = foundation._id
@@ -38,7 +38,6 @@ export async function dashboardRoutes(fastify: FastifyInstance) {
       AdoptionRequest.countDocuments({ foundationId: fId, status: 'reviewing' }),
     ])
 
-    // Adopciones por mes (últimos 6 meses)
     const sixMonthsAgo = new Date()
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6)
 
