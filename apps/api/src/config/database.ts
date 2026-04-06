@@ -1,16 +1,17 @@
 import mongoose from 'mongoose'
 import { env } from './env'
+import { logger } from './logger'
 
 export async function connectDatabase(): Promise<void> {
   try {
     await mongoose.connect(env.MONGODB_URI)
-    console.log('✅ MongoDB conectado')
+    logger.info('MongoDB conectado')
   } catch (error) {
-    console.error('❌ Error conectando MongoDB:', error)
+    logger.error(error, 'Error conectando MongoDB')
     process.exit(1)
   }
 }
 
 mongoose.connection.on('disconnected', () => {
-  console.warn('⚠️  MongoDB desconectado')
+  logger.warn('MongoDB desconectado')
 })

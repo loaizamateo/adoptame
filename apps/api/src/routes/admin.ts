@@ -60,7 +60,7 @@ export async function adminRoutes(fastify: FastifyInstance) {
           html: `<p>Hola ${owner.name}, tu fundación <strong>${foundation.name}</strong> fue verificada. Ya aparece con el badge oficial en Adoptame.</p>`,
         })
       }
-    } catch (e) { console.error('[email] verify notify:', e) }
+    } catch (e) { request.log.error(e, 'email: error notificando verificación de fundación') }
 
     return reply.send({ success: true, data: foundation })
   })
