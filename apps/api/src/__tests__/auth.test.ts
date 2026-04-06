@@ -43,6 +43,7 @@ function makeUser(overrides: Record<string, any> = {}): Record<string, any> {
     email: 'test@example.com',
     role: 'adopter',
     active: true,
+    tokenVersion: 0,
     password: '$2b$12$hashedpassword',
     resetPasswordToken: undefined as string | undefined,
     resetPasswordExpires: undefined as Date | undefined,
@@ -145,7 +146,7 @@ describe('POST /api/v1/auth/refresh', () => {
   it('issues a new access token for a valid refresh token', async () => {
     const user = makeUser()
     const refreshToken = app.jwt.sign(
-      { userId: user._id.toString(), type: 'refresh' },
+      { userId: user._id.toString(), type: 'refresh', tokenVersion: 0 },
       { expiresIn: '30d' }
     )
     ;(MockUser.findById as jest.Mock).mockResolvedValue({ ...user, active: true })
@@ -183,7 +184,7 @@ describe('POST /api/v1/auth/refresh', () => {
   it('returns 401 when user does not exist', async () => {
     const fakeId = new mongoose.Types.ObjectId()
     const refreshToken = app.jwt.sign(
-      { userId: fakeId.toString(), type: 'refresh' },
+      { userId: fakeId.toString(), type: 'refresh', tokenVersion: 0 },
       { expiresIn: '30d' }
     )
     ;(MockUser.findById as jest.Mock).mockResolvedValue(null)
@@ -191,6 +192,47 @@ describe('POST /api/v1/auth/refresh', () => {
     const res = await supertest(app.server)
       .post('/api/v1/auth/refresh')
       .send({ refreshToken })
+    expect(res.status).toBe(401)
+  })
+
+  it('returns 401 when tokenVersion does not match (token was invalidated by logout)', async () => {
+    const user = makeUser({ tokenVersion: 1 }) // version bumped after logout
+    const refreshToken = app.jwt.sign(
+      { userId: user._id.toString(), type: 'refresh', tokenVersion: 0 }, // old version
+      { expiresIn: '30d' }
+    )
+    ;(MockUser.findById as jest.Mock).mockResolvedValue(user)
+
+    const res = await supertest(app.server)
+      .post('/api/v1/auth/refresh')
+      .send({ refreshToken })
+
+    expect(res.status).toBe(401)
+  })
+})
+
+// ─── POST /auth/logout ────────────────────────────────────────────────────────
+
+describe('POST /api/v1/auth/logout', () => {
+  it('increments tokenVersion and returns 200', async () => {
+    const user = makeUser()
+    const token = signToken(app, { userId: user._id.toString(), role: 'adopter' })
+    ;(MockUser.findByIdAndUpdate as jest.Mock).mockResolvedValue(undefined)
+
+    const res = await supertest(app.server)
+      .post('/api/v1/auth/logout')
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.status).toBe(200)
+    expect(res.body.success).toBe(true)
+    expect(MockUser.findByIdAndUpdate).toHaveBeenCalledWith(
+      user._id.toString(),
+      { $inc: { tokenVersion: 1 } }
+    )
+  })
+
+  it('returns 401 without authentication', async () => {
+    const res = await supertest(app.server).post('/api/v1/auth/logout')
     expect(res.status).toBe(401)
   })
 })

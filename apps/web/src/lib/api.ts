@@ -14,14 +14,13 @@ function getStoredAuth() {
   } catch { return null }
 }
 
-function saveTokens(accessToken: string, refreshToken: string) {
+function saveAccessToken(accessToken: string) {
   if (typeof window === 'undefined') return
   try {
     const raw = localStorage.getItem('adoptame-auth')
     if (!raw) return
     const parsed = JSON.parse(raw)
     parsed.state.accessToken = accessToken
-    parsed.state.refreshToken = refreshToken
     localStorage.setItem('adoptame-auth', JSON.stringify(parsed))
   } catch {}
 }
@@ -69,8 +68,8 @@ api.interceptors.response.use(
           `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1'}/auth/refresh`,
           { refreshToken: auth.refreshToken }
         )
-        const { accessToken, refreshToken } = res.data.data
-        saveTokens(accessToken, refreshToken)
+        const { accessToken } = res.data.data
+        saveAccessToken(accessToken)
         original.headers.Authorization = `Bearer ${accessToken}`
         processQueue(null, accessToken)
         return api(original)
