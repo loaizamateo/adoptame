@@ -1,4 +1,5 @@
 import { env } from '../config/env'
+import { logger } from '../config/logger'
 
 interface EmailOptions {
   to: string
@@ -8,7 +9,7 @@ interface EmailOptions {
 
 export async function sendEmail({ to, subject, html }: EmailOptions): Promise<void> {
   if (!env.RESEND_API_KEY) {
-    console.log(`[email] No RESEND_API_KEY — skip: ${subject} → ${to}`)
+    logger.debug({ to, subject }, 'email: sin RESEND_API_KEY, omitiendo envío')
     return
   }
   const res = await fetch('https://api.resend.com/emails', {
@@ -21,7 +22,7 @@ export async function sendEmail({ to, subject, html }: EmailOptions): Promise<vo
   })
   if (!res.ok) {
     const err = await res.text()
-    console.error(`[email] Error sending to ${to}:`, err)
+    logger.error({ to, subject, status: res.status, body: err }, 'email: error al enviar')
   }
 }
 

@@ -69,7 +69,7 @@ export async function adoptionRoutes(fastify: FastifyInstance) {
         )
         await sendEmail({ to: foundationOwner.email, ...tpl })
       }
-    } catch (e) { console.error('[email] adoption notify:', e) }
+    } catch (e) { request.log.error(e, 'email: error notificando nueva solicitud') }
 
     return reply.status(201).send({ success: true, data: adoption })
   })
@@ -165,7 +165,7 @@ export async function adoptionRoutes(fastify: FastifyInstance) {
         const tpl = emailTemplates.adoptionStatusChanged(adopter.name, petDoc?.name ?? 'tu mascota', status, notes)
         await sendEmail({ to: adopter.email, ...tpl })
       }
-    } catch (e) { console.error('[email] status notify:', e) }
+    } catch (e) { request.log.error(e, 'email: error notificando cambio de estado') }
 
     // Si se aprueba, poner la mascota en "en proceso" de forma atómica.
     // findOneAndUpdate con condición garantiza que solo una aprobación

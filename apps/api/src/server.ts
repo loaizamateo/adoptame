@@ -15,7 +15,13 @@ import { dashboardRoutes } from './routes/dashboard'
 import { fosterHomeRoutes } from './routes/fosterHomes'
 import { searchRoutes } from './routes/search'
 
-const fastify = Fastify({ logger: env.NODE_ENV === 'development' })
+const isDev = env.NODE_ENV !== 'production'
+
+const fastify = Fastify({
+  logger: isDev
+    ? { level: 'debug', transport: { target: 'pino-pretty', options: { colorize: true } } }
+    : { level: 'info' },
+})
 
 async function bootstrap() {
   await fastify.register(helmet)
@@ -39,8 +45,8 @@ async function bootstrap() {
   await connectDatabase()
   const port = parseInt(env.PORT)
   await fastify.listen({ port, host: '0.0.0.0' })
-  console.log(`🚀 API corriendo en http://localhost:${port}`)
+  fastify.log.info(`API corriendo en http://localhost:${port}`)
 }
 
-bootstrap().catch((err) => { console.error(err); process.exit(1) })
+bootstrap().catch((err) => { fastify.log.error(err, 'Error al iniciar el servidor'); process.exit(1) })
 

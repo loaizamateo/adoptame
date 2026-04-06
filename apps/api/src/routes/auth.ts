@@ -181,7 +181,7 @@ export async function authRoutes(fastify: FastifyInstance) {
       await user.save()
       const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${rawToken}`
       const tpl = emailTemplates.resetPassword(user.name, resetUrl)
-      sendEmail({ to: user.email, ...tpl }).catch(console.error)
+      sendEmail({ to: user.email, ...tpl }).catch((err) => request.log.error(err, 'email: error enviando reset password'))
     }
 
     return reply.send({
