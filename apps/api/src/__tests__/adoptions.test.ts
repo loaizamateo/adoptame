@@ -23,6 +23,7 @@ jest.mock('../models/Pet', () => ({
   Pet: {
     findById: jest.fn(),
     findByIdAndUpdate: jest.fn(),
+    findOneAndUpdate: jest.fn(),
   },
 }))
 
@@ -274,7 +275,8 @@ describe('PATCH /api/v1/adoptions/:id/status', () => {
     // Use mockChain so .select() is supported on User.findById(...)
     ;(MockUser.findById as jest.Mock).mockReturnValue(mockChain(mockAdopter))
     ;(MockPet.findById as jest.Mock).mockResolvedValue(makePet())
-    ;(MockPet.findByIdAndUpdate as jest.Mock).mockResolvedValue(makePet())
+    // findOneAndUpdate returns the pet by default (simulates pet was available)
+    ;(MockPet.findOneAndUpdate as jest.Mock).mockResolvedValue(makePet())
     return adoption
   }
 
@@ -290,47 +292,61 @@ describe('PATCH /api/v1/adoptions/:id/status', () => {
     expect(res.body.data.status).toBe('reviewing')
   })
 
-  it('calls Pet.findByIdAndUpdate with in_process when approved', async () => {
-    setupStatusUpdate()
+  it('atomically sets pet to in_process when approved', async () => {
+    const adoption = setupStatusUpdate()
 
-    await supertest(app.server)
+    const res = await supertest(app.server)
       .patch(`/api/v1/adoptions/${adoptionId}/status`)
       .set('Authorization', `Bearer ${foundationToken}`)
       .send({ status: 'approved' })
 
-    expect(MockPet.findByIdAndUpdate).toHaveBeenCalledWith(
-      petId,
-      { status: 'in_process' }
+    expect(res.status).toBe(200)
+    expect(MockPet.findOneAndUpdate).toHaveBeenCalledWith(
+      { _id: adoption.petId, status: 'available' },
+      { status: 'in_process' },
     )
   })
 
-  it('calls Pet.findByIdAndUpdate with adopted when completed', async () => {
+  it('returns 409 when pet was already approved by a concurrent request', async () => {
+    setupStatusUpdate()
+    // Simulate race: findOneAndUpdate finds no pet with status 'available'
+    ;(MockPet.findOneAndUpdate as jest.Mock).mockResolvedValue(null)
+
+    const res = await supertest(app.server)
+      .patch(`/api/v1/adoptions/${adoptionId}/status`)
+      .set('Authorization', `Bearer ${foundationToken}`)
+      .send({ status: 'approved' })
+
+    expect(res.status).toBe(409)
+  })
+
+  it('atomically sets pet to adopted when completed', async () => {
     setupStatusUpdate()
 
-    await supertest(app.server)
+    const res = await supertest(app.server)
       .patch(`/api/v1/adoptions/${adoptionId}/status`)
       .set('Authorization', `Bearer ${foundationToken}`)
       .send({ status: 'completed' })
 
-    expect(MockPet.findByIdAndUpdate).toHaveBeenCalledWith(
-      petId,
-      { status: 'adopted' }
+    expect(res.status).toBe(200)
+    expect(MockPet.findOneAndUpdate).toHaveBeenCalledWith(
+      { _id: petId, status: 'in_process' },
+      { status: 'adopted' },
     )
   })
 
-  it('restores pet to available when rejected from in_process', async () => {
+  it('atomically restores pet to available when rejected', async () => {
     setupStatusUpdate()
-    // Pet is currently in_process
-    ;(MockPet.findById as jest.Mock).mockResolvedValue(makePet({ status: 'in_process' }))
 
-    await supertest(app.server)
+    const res = await supertest(app.server)
       .patch(`/api/v1/adoptions/${adoptionId}/status`)
       .set('Authorization', `Bearer ${foundationToken}`)
       .send({ status: 'rejected' })
 
-    expect(MockPet.findByIdAndUpdate).toHaveBeenCalledWith(
-      petId,
-      { status: 'available' }
+    expect(res.status).toBe(200)
+    expect(MockPet.findOneAndUpdate).toHaveBeenCalledWith(
+      { _id: petId, status: 'in_process' },
+      { status: 'available' },
     )
   })
 
