@@ -167,22 +167,37 @@ export async function adoptionRoutes(fastify: FastifyInstance) {
       }
     } catch (e) { console.error('[email] status notify:', e) }
 
-    // Si se aprueba, poner la mascota en "en proceso"
+    // Si se aprueba, poner la mascota en "en proceso" de forma atómica.
+    // findOneAndUpdate con condición garantiza que solo una aprobación
+    // concurrent gane — si otra ya aprobó primero, pet.status ya no es
+    // 'available' y la operación devuelve null.
     if (status === 'approved') {
-      await Pet.findByIdAndUpdate(adoption.petId, { status: 'in_process' })
-    }
-
-    // Si se completa, marcar mascota como adoptada
-    if (status === 'completed') {
-      await Pet.findByIdAndUpdate(adoption.petId, { status: 'adopted' })
-    }
-
-    // Si se rechaza y estaba en proceso, volver a disponible
-    if (status === 'rejected') {
-      const pet = await Pet.findById(adoption.petId)
-      if (pet?.status === 'in_process') {
-        await Pet.findByIdAndUpdate(adoption.petId, { status: 'available' })
+      const pet = await Pet.findOneAndUpdate(
+        { _id: adoption.petId, status: 'available' },
+        { status: 'in_process' },
+      )
+      if (!pet) {
+        return reply.status(409).send({
+          success: false,
+          error: 'Esta mascota ya fue aprobada para otra solicitud',
+        })
       }
+    }
+
+    // Si se completa, marcar mascota como adoptada de forma atómica.
+    if (status === 'completed') {
+      await Pet.findOneAndUpdate(
+        { _id: adoption.petId, status: 'in_process' },
+        { status: 'adopted' },
+      )
+    }
+
+    // Si se rechaza y estaba en proceso, volver a disponible de forma atómica.
+    if (status === 'rejected') {
+      await Pet.findOneAndUpdate(
+        { _id: adoption.petId, status: 'in_process' },
+        { status: 'available' },
+      )
     }
 
     return reply.send({ success: true, data: adoption })
