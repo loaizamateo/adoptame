@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import { signPhotoUrls } from '../services/storage'
+import { signPhotoUrls, signPhotoUrlsBatch } from '../services/storage'
 import { createPetSchema, updatePetSchema } from '@adoptame/schemas'
 import { Pet } from '../models/Pet'
 import { Foundation } from '../models/Foundation'
@@ -57,13 +57,9 @@ export async function petRoutes(fastify: FastifyInstance) {
       Pet.countDocuments(filter),
     ])
 
-    const signedData = await Promise.all(
-      data.map(async (pet) => {
-        const obj = pet.toObject()
-        if (obj.photos?.length) obj.photos = await signPhotoUrls(obj.photos)
-        return obj
-      })
-    )
+    const petObjs = data.map((pet) => pet.toObject())
+    const signedArrays = await signPhotoUrlsBatch(petObjs.map((p) => p.photos ?? []))
+    const signedData = petObjs.map((obj, i) => ({ ...obj, photos: signedArrays[i] }))
 
     return reply.send({
       success: true,
@@ -104,13 +100,9 @@ export async function petRoutes(fastify: FastifyInstance) {
       Pet.countDocuments(filter),
     ])
 
-    const signedData = await Promise.all(
-      data.map(async (pet) => {
-        const obj = pet.toObject()
-        if (obj.photos?.length) obj.photos = await signPhotoUrls(obj.photos)
-        return obj
-      })
-    )
+    const petObjs = data.map((pet) => pet.toObject())
+    const signedArrays = await signPhotoUrlsBatch(petObjs.map((p) => p.photos ?? []))
+    const signedData = petObjs.map((obj, i) => ({ ...obj, photos: signedArrays[i] }))
 
     return reply.send({
       success: true,

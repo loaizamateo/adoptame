@@ -59,6 +59,23 @@ export async function signPhotoUrls(photos: string[]): Promise<string[]> {
   return Promise.all(photos.map(getSignedFileUrl))
 }
 
+/**
+ * Firma en un único batch todas las keys de múltiples items.
+ * Deduplica keys y evita firmar la misma key más de una vez.
+ *
+ * Ejemplo:
+ *   signPhotoUrlsBatch([['a','b'], ['b','c']]) → [['urlA','urlB'], ['urlB','urlC']]
+ */
+export async function signPhotoUrlsBatch(keysPerItem: string[][]): Promise<string[][]> {
+  const uniqueKeys = [...new Set(keysPerItem.flat())]
+  if (!uniqueKeys.length) return keysPerItem.map(() => [])
+
+  const signed = await Promise.all(uniqueKeys.map(getSignedFileUrl))
+  const urlMap = new Map(uniqueKeys.map((key, i) => [key, signed[i]]))
+
+  return keysPerItem.map((keys) => keys.map((key) => urlMap.get(key) ?? key))
+}
+
 export async function deleteFile(key: string): Promise<void> {
   if (!s3 || !env.R2_BUCKET_NAME) return
   // Soporta tanto key como URL completa (legacy)

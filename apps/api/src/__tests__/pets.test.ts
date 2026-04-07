@@ -24,6 +24,7 @@ jest.mock('../models/Foundation', () => ({
 
 jest.mock('../services/storage', () => ({
   signPhotoUrls: jest.fn((photos: string[]) => Promise.resolve(photos)),
+  signPhotoUrlsBatch: jest.fn((keysPerItem: string[][]) => Promise.resolve(keysPerItem)),
   uploadFile: jest.fn(),
   getSignedFileUrl: jest.fn((k: string) => Promise.resolve(k)),
   deleteFile: jest.fn(),

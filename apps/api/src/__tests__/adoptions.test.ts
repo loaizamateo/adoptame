@@ -46,6 +46,7 @@ jest.mock('../services/email', () => ({
 
 jest.mock('../services/storage', () => ({
   signPhotoUrls: jest.fn((photos: string[]) => Promise.resolve(photos)),
+  signPhotoUrlsBatch: jest.fn((keysPerItem: string[][]) => Promise.resolve(keysPerItem)),
 }))
 
 import { User } from '../models/User'

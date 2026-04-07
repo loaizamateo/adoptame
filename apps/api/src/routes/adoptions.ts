@@ -1,5 +1,5 @@
 import { sendEmail, emailTemplates } from '../services/email'
-import { signPhotoUrls } from '../services/storage'
+import { signPhotoUrls, signPhotoUrlsBatch } from '../services/storage'
 import { FastifyInstance } from 'fastify'
 import { createAdoptionRequestSchema } from '@adoptame/schemas'
 import { AdoptionRequest, AdoptionStatus } from '../models/AdoptionRequest'
@@ -7,11 +7,13 @@ import { Pet } from '../models/Pet'
 import { Foundation } from '../models/Foundation'
 
 async function signAdoptionPhotos(adoptions: any[]): Promise<any[]> {
-  return Promise.all(adoptions.map(async (a) => {
-    const obj = a.toObject ? a.toObject() : a
-    if (obj.petId?.photos?.length) obj.petId.photos = await signPhotoUrls(obj.petId.photos)
+  const objs = adoptions.map((a) => (a.toObject ? a.toObject() : a))
+  const photoKeys = objs.map((o) => o.petId?.photos ?? [])
+  const signedArrays = await signPhotoUrlsBatch(photoKeys)
+  return objs.map((obj, i) => {
+    if (obj.petId && signedArrays[i].length) obj.petId.photos = signedArrays[i]
     return obj
-  }))
+  })
 }
 
 export async function adoptionRoutes(fastify: FastifyInstance) {

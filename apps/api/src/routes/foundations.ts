@@ -3,7 +3,7 @@ import { createFoundationSchema, updateFoundationSchema } from '@adoptame/schema
 import { Foundation } from '../models/Foundation'
 import { User } from '../models/User'
 import { Pet } from '../models/Pet'
-import { signPhotoUrls } from '../services/storage'
+import { signPhotoUrlsBatch } from '../services/storage'
 
 export async function foundationRoutes(fastify: FastifyInstance) {
   const { authenticate } = fastify
@@ -31,12 +31,8 @@ export async function foundationRoutes(fastify: FastifyInstance) {
       .limit(12)
       .lean()
 
-    const pets = await Promise.all(
-      rawPets.map(async (pet) => {
-        if (pet.photos?.length) pet.photos = await signPhotoUrls(pet.photos)
-        return pet
-      })
-    )
+    const signedArrays = await signPhotoUrlsBatch(rawPets.map((p) => p.photos ?? []))
+    const pets = rawPets.map((pet, i) => ({ ...pet, photos: signedArrays[i] }))
 
     return reply.send({ success: true, data: { foundation, pets } })
   })
